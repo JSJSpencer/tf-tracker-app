@@ -1,41 +1,38 @@
 # T&F Summer Training — PWA
 
-A real installable app version of your training tracker. This folder is a complete static site — no build step needed.
+A complete, installable app version of your training tracker. Rebuilt from scratch with **zero external dependencies** — no CDN scripts, no fonts fetched at runtime, nothing that can fail to load. Tested end-to-end in a real browser before shipping (every day, every week 1-11, every checklist, the warm-up picker, and the interval timer).
 
 ## Files
-- `index.html` — the app
-- `manifest.json` — tells iOS/Android this is installable
+- `index.html` — the whole app (HTML + CSS + JS, self-contained)
+- `manifest.json` — makes it installable
 - `sw.js` — service worker, caches everything after first load so it works offline
 - `icons/` — app icons
 
-## 1. Host it (pick one, both are free, ~5 minutes)
+## 1. Host it (free, ~5 minutes)
 
 ### Option A — Netlify Drop (easiest)
 1. Go to https://app.netlify.com/drop
-2. Drag the whole `pwa` folder onto the page
+2. Drag the whole `tf-tracker-pwa` folder onto the page
 3. You'll get a live URL like `https://random-name-123.netlify.app`
 
 ### Option B — GitHub Pages
-1. Create a new repo on GitHub, e.g. `tf-tracker-app`
-2. Upload all the files in this folder (keep the `icons/` folder structure)
-3. Go to Settings → Pages → set source to the `main` branch, root folder
-4. Your app will be live at `https://yourusername.github.io/tf-tracker-app`
+1. Create a repo, e.g. `tf-tracker-pwa`
+2. Click **Add file → Upload files**, drag in the whole folder (keep `icons/` nested inside)
+3. Commit changes
+4. Settings → Pages → Source: `main` branch, root folder
+5. Live at `https://yourusername.github.io/tf-tracker-pwa`
 
-## 2. Install it on your iPhone
-1. Open the live URL in **Safari** (must be Safari, not Chrome)
-2. Tap the Share icon (square with arrow) at the bottom
-3. Scroll down, tap **Add to Home Screen**
-4. Tap **Add**
+## 2. Install on your iPhone
+1. Open the live URL in **Safari** (must be Safari)
+2. Tap Share (square with arrow) → **Add to Home Screen** → **Add**
 
-It'll now sit on your home screen with its own icon, open full-screen with no browser bar, and keep working without signal once you've opened it at least once.
+It'll sit on your home screen with its own icon, open full-screen, and after the first load keep working with no signal.
+
+## If you had the old broken version installed
+1. Long-press the old icon on your home screen → Remove App
+2. Deploy this new folder to your host
+3. Open the fresh URL in Safari, then Add to Home Screen again
 
 ## Notes
-- Progress is saved locally on your phone (`localStorage`), per week/day — nothing is sent anywhere.
-- This version has **zero external dependencies** — no CDN scripts, no fonts fetched at runtime. Everything needed is in this folder, so it can't fail from a slow or blocked network request.
-- If you update the files later, bump `CACHE_NAME` in `sw.js` (e.g. `tf-tracker-v3`) so your phone picks up the new version instead of serving the cached one.
-
-## If you already installed the broken version
-The old version loaded fonts/scripts from the internet and could show a gray blank screen if that failed. To fix an already-installed copy:
-1. Remove the app from your home screen (long-press → Remove App)
-2. Re-deploy these updated files to your host (Netlify/GitHub Pages)
-3. Open the URL fresh in Safari, then Add to Home Screen again
+- Progress saves locally on your phone (`localStorage`) per week/day — nothing is sent anywhere.
+- If you edit the files later, bump `CACHE_NAME` in `sw.js` (e.g. `tf-tracker-v5`) so your phone picks up the change instead of serving a cached copy.

@@ -21,45 +21,26 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color: #14110F;
   }
-  .display {
-    font-family: Georgia, "Times New Roman", serif;
-    font-weight: 700;
-  }
   .tabular { font-variant-numeric: tabular-nums; }
   button { font-family: inherit; }
   a { color: inherit; }
-
   #app { min-height: 100vh; padding-bottom: 96px; }
 
-  header.top {
-    background: #14110F;
-    color: #F5F1E8;
-    padding: 24px 20px 16px;
-  }
+  .top { background: #14110F; color: #F5F1E8; padding: 24px 20px 16px; }
   .top-row { display: flex; align-items: center; justify-content: space-between; }
   .eyebrow { font-size: 10px; text-transform: uppercase; letter-spacing: 3px; font-weight: 700; margin: 0; }
   .title { font-size: 23px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; line-height: 1.2; margin: 3px 0 0; }
   .subtitle { font-size: 12px; color: rgba(245,241,232,0.45); margin: 3px 0 0; }
-  .week-badge {
-    display: flex; flex-direction: column; align-items: center;
-    border: 1px solid rgba(245,241,232,0.2); border-radius: 8px;
-    padding: 6px 12px; min-width: 52px;
-  }
+  .week-badge { display: flex; flex-direction: column; align-items: center; border: 1px solid rgba(245,241,232,0.2); border-radius: 8px; padding: 6px 12px; min-width: 52px; }
   .week-badge span:first-child { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: rgba(245,241,232,0.45); }
   .week-badge span:last-child { font-size: 20px; font-weight: 700; }
 
   .lane-row { display: flex; align-items: center; gap: 4px; margin-top: 20px; }
-  .lane-row button.nav-arrow { background: none; border: none; color: rgba(245,241,232,0.5); padding: 4px; cursor: pointer; }
+  .nav-arrow { background: none; border: none; color: rgba(245,241,232,0.5); padding: 4px; cursor: pointer; }
   .lane-track { flex: 1; }
   .lane-cells { display: flex; gap: 3px; }
-  .lane-cell {
-    position: relative; flex: 1; height: 28px; border-radius: 3px; overflow: hidden;
-    border: none; cursor: pointer;
-  }
-  .lane-cell .num {
-    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    font-size: 10px; font-weight: 700; color: #fff;
-  }
+  .lane-cell { position: relative; flex: 1; height: 28px; border-radius: 3px; overflow: hidden; border: none; cursor: pointer; }
+  .lane-cell .num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #fff; }
   .ticks { display: flex; gap: 3px; margin-top: 3px; }
   .tick-cell { flex: 1; display: flex; justify-content: center; }
   .tick { width: 1px; background: rgba(245,241,232,0.25); }
@@ -71,7 +52,7 @@
   .card-body { padding: 16px; }
   .card h2 { font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0; }
   .card h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 6px; }
-  .card p.desc { margin-top: 4px; font-size: 14px; color: rgba(20,17,15,0.65); }
+  .desc { margin-top: 4px; font-size: 14px; color: rgba(20,17,15,0.65); }
   .week-pill { margin-top: 12px; border-radius: 8px; padding: 10px 12px; font-size: 14px; font-weight: 600; }
   .video-link { margin-top: 8px; display: inline-block; font-size: 12px; text-decoration: underline; }
 
@@ -82,22 +63,13 @@
   .tj-note.recovery svg { flex: none; margin-top: 2px; }
 
   .warmup-header { display: flex; align-items: center; justify-content: space-between; }
-  select.warmup-select {
-    border-radius: 6px; border: 1px solid rgba(20,17,15,0.2); background: #F5F1E8;
-    padding: 4px 8px; font-size: 12px;
-  }
+  select.warmup-select { border-radius: 6px; border: 1px solid rgba(20,17,15,0.2); background: #F5F1E8; padding: 4px 8px; font-size: 12px; }
 
   ul.checklist { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
   li.arrow-line { padding: 6px 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #8A6A52; font-weight: 700; }
-  button.item-btn {
-    display: flex; width: 100%; align-items: flex-start; gap: 10px; border-radius: 8px;
-    padding: 6px 8px; text-align: left; background: none; border: none; cursor: pointer;
-  }
+  button.item-btn { display: flex; width: 100%; align-items: flex-start; gap: 10px; border-radius: 8px; padding: 6px 8px; text-align: left; background: none; border: none; cursor: pointer; }
   button.item-btn:active { background: rgba(20,17,15,0.06); }
-  .check-circle {
-    margin-top: 2px; display: flex; height: 18px; width: 18px; flex: none;
-    align-items: center; justify-content: center; border-radius: 999px; border: 2px solid rgba(20,17,15,0.25);
-  }
+  .check-circle { margin-top: 2px; display: flex; height: 18px; width: 18px; flex: none; align-items: center; justify-content: center; border-radius: 999px; border: 2px solid rgba(20,17,15,0.25); }
   .item-label { font-size: 14px; line-height: 1.4; padding-top: 1px; color: #14110F; }
   .item-label.done { color: rgba(20,17,15,0.35); text-decoration: line-through; }
 
@@ -112,31 +84,17 @@
   .timer-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
   .timer-hint { font-size: 12px; color: rgba(20,17,15,0.55); margin-bottom: 12px; }
   .preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .preset-btn {
-    border-radius: 8px; padding: 8px 12px; font-size: 12px; font-weight: 700;
-    background: none; cursor: pointer;
-  }
+  .preset-btn { border-radius: 8px; padding: 8px 12px; font-size: 12px; font-weight: 700; background: none; cursor: pointer; }
 
   .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
   .chip { border-radius: 999px; padding: 4px 12px; font-size: 12px; color: rgba(20,17,15,0.7); }
 
-  nav.tabbar {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: rgba(255,255,255,0.95); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-    border-top: 1px solid rgba(20,17,15,0.1); display: flex;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-  .tab-btn {
-    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
-    padding: 10px 0; background: none; border: none; cursor: pointer;
-  }
+  nav.tabbar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.95); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border-top: 1px solid rgba(20,17,15,0.1); display: flex; padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .tab-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 0; background: none; border: none; cursor: pointer; }
   .tab-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
   .tab-dash { height: 3px; width: 16px; border-radius: 999px; margin-top: 2px; }
 
-  .modal-overlay {
-    position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center;
-    background: rgba(0,0,0,0.7); padding: 16px;
-  }
+  .modal-overlay { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.7); padding: 16px; }
   .modal-box { width: 100%; max-width: 384px; border-radius: 16px; background: #F5F1E8; padding: 24px; box-shadow: 0 25px 50px rgba(0,0,0,0.4); border: 2px solid #14110F; }
   .modal-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
   .modal-top p { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: #8A8478; margin: 0; }
@@ -157,28 +115,61 @@
 <div id="app"></div>
 
 <script>
+"use strict";
+
 /* ---------------------------------------------------------------
-   ICONS — tiny inline SVGs, no external icon library required
+   h() — tiny hyperscript helper. Builds real DOM nodes directly
+   (no HTML string concatenation), so there is no attribute-escaping
+   class of bug possible: text always goes through textContent.
 ----------------------------------------------------------------*/
-function icon(name, { size = 18, color = "currentColor", strokeWidth = 2 } = {}) {
-  const a = `width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round"`;
-  switch (name) {
-    case "check": return `<svg ${a}><polyline points="20 6 9 17 4 12"/></svg>`;
-    case "timer": return `<svg ${a}><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2"/><path d="M9 2h6"/></svg>`;
-    case "play": return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${color}" stroke="none"><polygon points="6 3 20 12 6 21 6 3"/></svg>`;
-    case "pause": return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${color}" stroke="none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
-    case "rotate-ccw": return `<svg ${a}><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>`;
-    case "chevron-left": return `<svg ${a}><polyline points="15 18 9 12 15 6"/></svg>`;
-    case "chevron-right": return `<svg ${a}><polyline points="9 18 15 12 9 6"/></svg>`;
-    case "zap": return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${color}" stroke="none"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
-    case "refresh-cw": return `<svg ${a}><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/></svg>`;
-    case "mountain": return `<svg ${a}><path d="M3 20l7-11 4 6 3-4 4 9H3z"/></svg>`;
-    case "move": return `<svg ${a}><path d="M4 12h16"/><path d="M4 12l4-4M4 12l4 4"/><path d="M20 12l-4-4M20 12l-4 4"/><path d="M12 4v16"/></svg>`;
-    case "leaf": return `<svg ${a}><path d="M11 20A7 7 0 0 1 4 13c0-5 8-11 15-11 0 8-4 18-8 18z"/><path d="M4 13c4 0 8-2 11-9"/></svg>`;
-    case "droplet": return `<svg ${a}><path d="M12 2s6 7.5 6 12a6 6 0 0 1-12 0c0-4.5 6-12 6-12z"/></svg>`;
-    case "party": return `<svg ${a}><path d="M5 3l3 3M9 2l1 4M2 9l4 1"/><path d="M4 20l10-4L6 6z"/><circle cx="18" cy="6" r="1" fill="${color}"/><circle cx="20" cy="12" r="1" fill="${color}"/></svg>`;
-    default: return "";
+function h(tag, attrs, ...children) {
+  const node = document.createElement(tag);
+  attrs = attrs || {};
+  for (const key in attrs) {
+    const val = attrs[key];
+    if (val == null || val === false) continue;
+    if (key === "class") node.className = val;
+    else if (key === "style" && typeof val === "object") Object.assign(node.style, val);
+    else if (key.startsWith("on") && typeof val === "function") node.addEventListener(key.slice(2).toLowerCase(), val);
+    else if (key === "html") node.innerHTML = val; // only ever used with our own constant icon svg strings, never user data
+    else node.setAttribute(key, String(val));
   }
+  const flatten = (arr) => arr.reduce((acc, c) => Array.isArray(c) ? acc.concat(flatten(c)) : acc.concat([c]), []);
+  flatten(children).forEach((child) => {
+    if (child == null || child === false) return;
+    if (typeof child === "string" || typeof child === "number") node.appendChild(document.createTextNode(String(child)));
+    else node.appendChild(child);
+  });
+  return node;
+}
+
+/* ---------- inline icon set — constant SVG strings, never mixed with user data ---------- */
+function iconSvg(name, size, color, strokeWidth) {
+  size = size || 18; color = color || "currentColor"; strokeWidth = strokeWidth || 2;
+  const a = `width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round"`;
+  const table = {
+    check: `<svg ${a}><polyline points="20 6 9 17 4 12"/></svg>`,
+    timer: `<svg ${a}><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2"/><path d="M9 2h6"/></svg>`,
+    play: `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${color}" stroke="none"><polygon points="6 3 20 12 6 21 6 3"/></svg>`,
+    pause: `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${color}" stroke="none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`,
+    "rotate-ccw": `<svg ${a}><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>`,
+    "chevron-left": `<svg ${a}><polyline points="15 18 9 12 15 6"/></svg>`,
+    "chevron-right": `<svg ${a}><polyline points="9 18 15 12 9 6"/></svg>`,
+    zap: `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${color}" stroke="none"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+    "refresh-cw": `<svg ${a}><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/></svg>`,
+    mountain: `<svg ${a}><path d="M3 20l7-11 4 6 3-4 4 9H3z"/></svg>`,
+    move: `<svg ${a}><path d="M4 12h16"/><path d="M4 12l4-4M4 12l4 4"/><path d="M20 12l-4-4M20 12l-4 4"/><path d="M12 4v16"/></svg>`,
+    leaf: `<svg ${a}><path d="M11 20A7 7 0 0 1 4 13c0-5 8-11 15-11 0 8-4 18-8 18z"/><path d="M4 13c4 0 8-2 11-9"/></svg>`,
+    droplet: `<svg ${a}><path d="M12 2s6 7.5 6 12a6 6 0 0 1-12 0c0-4.5 6-12 6-12z"/></svg>`,
+    party: `<svg ${a}><path d="M5 3l3 3M9 2l1 4M2 9l4 1"/><path d="M4 20l10-4L6 6z"/><circle cx="18" cy="6" r="1" fill="${color}"/><circle cx="20" cy="12" r="1" fill="${color}"/></svg>`,
+  };
+  return table[name] || "";
+}
+function Icon(name, size, color, strokeWidth) {
+  const span = document.createElement("span");
+  span.style.display = "inline-flex";
+  span.innerHTML = iconSvg(name, size, color, strokeWidth);
+  return span;
 }
 
 /* ---------------------------------------------------------------
@@ -194,8 +185,8 @@ const CIRCUITS = {
   gc3: { name: "General Circuit 3", items: ["Toe Touches","Lunge Jumps","Back Hyper","Tuck Jumps","Bicycle Crunches","Squat Jumps","Push Ups","Sky Divers","Rocket Jumps","Side Crunches (L)","Side Crunch (R)","Single Leg Donkey Kicks (L)","Single Leg Donkey Kicks (R)","L-Overs","Line Hops","Alternating V-Sits"] },
   gc4: { name: "General Circuit 4", items: ["Squats","Incline Push Ups","Pogo Jumps","Hip Thrust","Lunges Forward","Jumping Jacks","Push Ups","V-Sit Ups","Lunges Lateral","Burpees","Sit Ups","Mountain Climbers","Decline Push Ups","Bicycle Crunches","Star Jump","Russian Twist"] },
   running: { name: "Running Circuit", items: ["Stride 200m","25 Crunches","25 Push Ups","Stride 100m","25 Back Hypers","10 L-Overs each side","Stride 100m","Lunges (10 out, 10 back)","25 Side Crunches","25 Side Crunches (opp. side)","Stride 200m","— rest 3', repeat 2x more —"] },
-  vacation: { name: "Vacation Circuit (30\" on / 30\" rest)", items: ["V-Sit Ups","100m Run","Push Ups","200m Run","Mountain Climbers","100m Run","Lateral Squats (L+R)","200m Run","Hip Extenders/Thrust","100m Run","Sit Ups","200m Run","Squats","100m Run","Side-Ups (L+R)","200m Run","Burpees","100m Run","Single Leg Squats (L+R)","200m Run"] },
-  dudley: { name: "Dudley Circuit (30\" work / 15\" rest)", items: ["Push Ups","Calf Raises","Push Up (Diamond)","Superman","60\" Sprint @ 70%","Sit Ups","Mountain Climbers","Sit Ups","60\" Sprint @ 70%","Squat Walk Forward","Burpees","Squat Walk Backward","Pogo Jumps","Forward Lunge","60\" Sprint @ 70%","Backward Lunge","Frog Jumps","Lateral Squats","V-Sit Ups","60\" Sprint @ 70%"] },
+  vacation: { name: 'Vacation Circuit (30" on / 30" rest)', items: ["V-Sit Ups","100m Run","Push Ups","200m Run","Mountain Climbers","100m Run","Lateral Squats (L+R)","200m Run","Hip Extenders/Thrust","100m Run","Sit Ups","200m Run","Squats","100m Run","Side-Ups (L+R)","200m Run","Burpees","100m Run","Single Leg Squats (L+R)","200m Run"] },
+  dudley: { name: 'Dudley Circuit (30" work / 15" rest)', items: ["Push Ups","Calf Raises","Push Up (Diamond)","Superman",'60" Sprint @ 70%',"Sit Ups","Mountain Climbers","Sit Ups",'60" Sprint @ 70%',"Squat Walk Forward","Burpees","Squat Walk Backward","Pogo Jumps","Forward Lunge",'60" Sprint @ 70%',"Backward Lunge","Frog Jumps","Lateral Squats","V-Sit Ups",'60" Sprint @ 70%'] },
 };
 
 const WARMUPS = {
@@ -259,14 +250,14 @@ const DAY2 = {
   label: "Circuits", full: "Day 2 — Circuits & Plyo",
   base: "Complete a 20-30' run or machine interval before the circuits below.",
   weeks: {
-    1:"2x General Circuit 1 @ 10-12 reps + 2x Mercury @ 20\"/40\"",
-    2:"2x General Circuit 2 @ 10-12 reps + 2x Venus @ 20\"/40\"",
-    3:"2x General Circuit 3 @ 12-14 reps + 2x Mars @ 20\"/40\"",
-    4:"2x General Circuit 4 @ 12-14 reps + 2x Bounding Series A @ 20\"/40\"",
-    5:"2x GC1 + 1x GC2 @ 10-12 reps + 2x Mercury @ 30\"/30\"",
-    6:"2x GC3 + 1x GC4 @ 10-12 reps + 2x Venus @ 30\"/30\"",
-    7:"2x GC2 + 1x GC3 @ 12-14 reps + 2x Mars @ 30\"/30\"",
-    8:"2x GC4 + 1x GC1 @ 12-14 reps + 2x Bounding Series A @ 30\"/30\"",
+    1:'2x General Circuit 1 @ 10-12 reps + 2x Mercury @ 20"/40"',
+    2:'2x General Circuit 2 @ 10-12 reps + 2x Venus @ 20"/40"',
+    3:'2x General Circuit 3 @ 12-14 reps + 2x Mars @ 20"/40"',
+    4:'2x General Circuit 4 @ 12-14 reps + 2x Bounding Series A @ 20"/40"',
+    5:'2x GC1 + 1x GC2 @ 10-12 reps + 2x Mercury @ 30"/30"',
+    6:'2x GC3 + 1x GC4 @ 10-12 reps + 2x Venus @ 30"/30"',
+    7:'2x GC2 + 1x GC3 @ 12-14 reps + 2x Mars @ 30"/30"',
+    8:'2x GC4 + 1x GC1 @ 12-14 reps + 2x Bounding Series A @ 30"/30"',
     9:"1x Circuit Warm Up",
     10:"1x Circuit Warm Up B",
     11:"Light circuit of your choice — pre-season taper",
@@ -306,9 +297,8 @@ const RECOVERY = {
   tj: "Don't skip the ice baths (2x/week recommended) — triple jump landings add up fast over a week of hills + bounding. This is where you protect next week's training, not lose fitness.",
 };
 
-const DAYS = { day1: DAY1, day2: DAY2, day3: DAY3, day4: DAY4 };
-const TABS = ["day1", "day2", "day3", "day4", "recovery"];
 const TAB_DATA = { day1: DAY1, day2: DAY2, day3: DAY3, day4: DAY4, recovery: RECOVERY };
+const TABS = ["day1", "day2", "day3", "day4", "recovery"];
 
 function circuitsForDay(dayKey, week) {
   if (dayKey === "day2") {
@@ -331,10 +321,10 @@ function circuitsForDay(dayKey, week) {
 }
 
 const TIMER_PRESETS = [
-  { label: "Plyo 20\"/40\"", work: 20, rest: 40, rounds: 6 },
-  { label: "Plyo 30\"/30\"", work: 30, rest: 30, rounds: 6 },
-  { label: "Vacation 30\"/30\"", work: 30, rest: 30, rounds: 10 },
-  { label: "Dudley 30\"/15\"", work: 30, rest: 15, rounds: 10 },
+  { label: 'Plyo 20"/40"', work: 20, rest: 40, rounds: 6 },
+  { label: 'Plyo 30"/30"', work: 30, rest: 30, rounds: 6 },
+  { label: 'Vacation 30"/30"', work: 30, rest: 30, rounds: 10 },
+  { label: 'Dudley 30"/15"', work: 30, rest: 15, rounds: 10 },
 ];
 
 /* ---------------------------------------------------------------
@@ -351,31 +341,21 @@ function saveProgress(key, value) {
 /* ---------------------------------------------------------------
    STATE
 ----------------------------------------------------------------*/
-const state = {
-  week: 1,
-  activeTab: "day1",
-  warmupChoice: "circuitA",
-  checked: {},
-};
-
+const state = { week: 1, activeTab: "day1", warmupChoice: "circuitA", checked: {} };
 function storageKey() { return `progress:w${state.week}:${state.activeTab}`; }
-
 function loadStateForDay() {
   const val = loadProgress(storageKey());
   state.checked = (val && val.checked) || {};
   if (val && val.warmupChoice) state.warmupChoice = val.warmupChoice;
 }
-
-function persist() {
-  saveProgress(storageKey(), { checked: state.checked, warmupChoice: state.warmupChoice });
-}
+function persist() { saveProgress(storageKey(), { checked: state.checked, warmupChoice: state.warmupChoice }); }
 
 /* ---------------------------------------------------------------
    TIMER
 ----------------------------------------------------------------*/
-let timer = null; // { work, rest, rounds, round, phase, secondsLeft, running, intervalId, label, accent }
-
-function beep(freq = 880, dur = 0.12) {
+let timer = null;
+function beep(freq, dur) {
+  freq = freq || 880; dur = dur || 0.12;
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     const osc = ctx.createOscillator();
@@ -390,16 +370,12 @@ function beep(freq = 880, dur = 0.12) {
     osc.stop(ctx.currentTime + dur + 0.02);
   } catch (e) {}
 }
-
 function openTimer(preset, accent) {
   timer = { work: preset.work, rest: preset.rest, rounds: preset.rounds, round: 1, phase: "work", secondsLeft: preset.work, running: false, intervalId: null, label: preset.label, accent };
   render();
 }
-function closeTimer() {
-  if (timer && timer.intervalId) clearInterval(timer.intervalId);
-  timer = null;
-  render();
-}
+function closeTimer() { if (timer && timer.intervalId) clearInterval(timer.intervalId); timer = null; render(); }
+function stopTimer() { if (!timer) return; timer.running = false; if (timer.intervalId) clearInterval(timer.intervalId); timer.intervalId = null; }
 function timerTick() {
   if (!timer) return;
   timer.secondsLeft -= 1;
@@ -416,258 +392,257 @@ function timerTick() {
   }
   renderTimerModal();
 }
-function startTimer() {
-  if (!timer || timer.phase === "done") return;
-  timer.running = true;
-  timer.intervalId = setInterval(timerTick, 1000);
-  renderTimerModal();
-}
-function stopTimer() {
-  if (!timer) return;
-  timer.running = false;
-  if (timer.intervalId) clearInterval(timer.intervalId);
-  timer.intervalId = null;
-}
+function startTimer() { if (!timer || timer.phase === "done") return; timer.running = true; timer.intervalId = setInterval(timerTick, 1000); renderTimerModal(); }
 function toggleTimer() { if (!timer) return; timer.running ? stopTimer() : startTimer(); renderTimerModal(); }
-function resetTimer() {
-  if (!timer) return;
-  stopTimer();
-  timer.round = 1; timer.phase = "work"; timer.secondsLeft = timer.work;
-  renderTimerModal();
-}
+function resetTimer() { if (!timer) return; stopTimer(); timer.round = 1; timer.phase = "work"; timer.secondsLeft = timer.work; renderTimerModal(); }
 
 /* ---------------------------------------------------------------
-   RENDER
+   UI BUILDERS — every one returns a real DOM node via h()
 ----------------------------------------------------------------*/
-function checklistHtml(items, checkedMap, accent, groupAttr) {
-  return `<ul class="checklist">${items.map((item, i) => {
+function Checklist(items, checkedMap, accent, onToggle) {
+  const ul = h("ul", { class: "checklist" });
+  items.forEach((item, i) => {
     if (item.startsWith("→")) {
-      return `<li class="arrow-line">${item}</li>`;
+      ul.appendChild(h("li", { class: "arrow-line" }, item));
+      return;
     }
     const done = !!checkedMap[i];
-    return `<li>
-      <button class="item-btn" data-action="toggle" ${groupAttr} data-index="${i}">
-        <span class="check-circle" style="border-color:${done ? accent : "rgba(20,17,15,0.25)"};background-color:${done ? accent : "transparent"}">
-          ${done ? icon("check", { size: 11, color: "#fff", strokeWidth: 3.5 }) : ""}
-        </span>
-        <span class="item-label ${done ? "done" : ""}">${item}</span>
-      </button>
-    </li>`;
-  }).join("")}</ul>`;
+    const circle = h("span", {
+      class: "check-circle",
+      style: { borderColor: done ? accent : "rgba(20,17,15,0.25)", backgroundColor: done ? accent : "transparent" },
+    }, done ? Icon("check", 11, "#fff", 3.5) : null);
+    const label = h("span", { class: "item-label" + (done ? " done" : "") }, item);
+    const btn = h("button", { class: "item-btn", onclick: () => onToggle(i) }, circle, label);
+    ul.appendChild(h("li", {}, btn));
+  });
+  return ul;
 }
 
-function render() {
+function Header() {
   const accent = ACCENT[state.activeTab];
-  const isRecovery = state.activeTab === "recovery";
-  const dayObj = TAB_DATA[state.activeTab];
-
-  // header
-  const laneCells = WEEKS.map((w) => {
+  const laneCells = h("div", { class: "lane-cells" });
+  WEEKS.forEach((w) => {
     const bg = w === state.week ? accent : (w < state.week ? "#3A362F" : "#F5F1E8");
-    const op = w === state.week ? 1 : (w < state.week ? 1 : 0.14);
-    return `<button class="lane-cell" data-action="set-week" data-week="${w}" style="background-color:${bg};opacity:${op}">
-      ${w === state.week ? `<span class="num">${w}</span>` : ""}
-    </button>`;
-  }).join("");
-  const ticks = WEEKS.map((w) => `<div class="tick-cell"><div class="tick" style="height:${w % 5 === 0 ? 6 : 3}px"></div></div>`).join("");
+    const op = w === state.week ? "1" : (w < state.week ? "1" : "0.14");
+    const cell = h("button", {
+      class: "lane-cell",
+      style: { backgroundColor: bg, opacity: op },
+      onclick: () => { state.week = w; loadStateForDay(); render(); },
+    }, w === state.week ? h("span", { class: "num" }, String(w)) : null);
+    laneCells.appendChild(cell);
+  });
+  const ticks = h("div", { class: "ticks" });
+  WEEKS.forEach((w) => {
+    ticks.appendChild(h("div", { class: "tick-cell" }, h("div", { class: "tick", style: { height: (w % 5 === 0 ? "6px" : "3px") } })));
+  });
 
-  const headerHtml = `
-    <header class="top">
-      <div class="top-row">
-        <div>
-          <p class="eyebrow" style="color:${accent}">Northeastern Track &amp; Field</p>
-          <h1 class="title">Summer Training</h1>
-          <p class="subtitle">Triple Jump build</p>
-        </div>
-        <div class="week-badge"><span>Wk</span><span class="tabular">${state.week}</span></div>
-      </div>
-      <div class="lane-row">
-        <button class="nav-arrow" data-action="week-prev">${icon("chevron-left", { size: 18, color: "rgba(245,241,232,0.5)" })}</button>
-        <div class="lane-track">
-          <div class="lane-cells">${laneCells}</div>
-          <div class="ticks">${ticks}</div>
-        </div>
-        <button class="nav-arrow" data-action="week-next">${icon("chevron-right", { size: 18, color: "rgba(245,241,232,0.5)" })}</button>
-      </div>
-    </header>`;
+  return h("header", { class: "top" },
+    h("div", { class: "top-row" },
+      h("div", {},
+        h("p", { class: "eyebrow", style: { color: accent } }, "Northeastern Track & Field"),
+        h("h1", { class: "title" }, "Summer Training"),
+        h("p", { class: "subtitle" }, "Triple Jump build"),
+      ),
+      h("div", { class: "week-badge" }, h("span", {}, "Wk"), h("span", { class: "tabular" }, String(state.week))),
+    ),
+    h("div", { class: "lane-row" },
+      h("button", { class: "nav-arrow", onclick: () => { state.week = Math.max(1, state.week - 1); loadStateForDay(); render(); } }, Icon("chevron-left", 18, "rgba(245,241,232,0.5)")),
+      h("div", { class: "lane-track" }, laneCells, ticks),
+      h("button", { class: "nav-arrow", onclick: () => { state.week = Math.min(11, state.week + 1); loadStateForDay(); render(); } }, Icon("chevron-right", 18, "rgba(245,241,232,0.5)")),
+    ),
+  );
+}
 
-  // main
-  let mainHtml = "";
-  if (!isRecovery) {
-    const groups = circuitsForDay(state.activeTab, state.week);
-    const totalBoxes = groups.reduce((sum, g) => sum + g.items.filter((it) => !it.startsWith("→")).length, 0);
-    const doneBoxes = Object.values(state.checked).filter(Boolean).length;
-    const dayComplete = totalBoxes > 0 && doneBoxes >= totalBoxes;
+function DayMain() {
+  const accent = ACCENT[state.activeTab];
+  const dayObj = TAB_DATA[state.activeTab];
+  const frag = document.createDocumentFragment();
+  const groups = circuitsForDay(state.activeTab, state.week);
+  const totalBoxes = groups.reduce((sum, g) => sum + g.items.filter((it) => !it.startsWith("→")).length, 0);
+  const doneBoxes = Object.values(state.checked).filter(Boolean).length;
+  const dayComplete = totalBoxes > 0 && doneBoxes >= totalBoxes;
 
-    mainHtml += `
-      <div class="card">
-        <div class="card-accent-bar" style="background-color:${accent}"></div>
-        <div class="card-body">
-          <h2>${dayObj.full}</h2>
-          <p class="desc">${dayObj.base}</p>
-          <div class="week-pill" style="background-color:${accent}12;border:1px solid ${accent}35">Week ${state.week}: ${dayObj.weeks[state.week]}</div>
-          ${state.activeTab === "day4" ? `<a class="video-link" style="color:${accent}" href="${DAY4.lungeMatrixUrl}" target="_blank" rel="noreferrer">Lunge Matrix video ↗</a>` : ""}
-        </div>
-      </div>
-      <div class="tj-note">
-        <p class="label">Triple Jump Note</p>
-        <p>${dayObj.tj}</p>
-      </div>`;
+  const dayCardBody = h("div", { class: "card-body" },
+    h("h2", {}, dayObj.full),
+    h("p", { class: "desc" }, dayObj.base),
+    h("div", { class: "week-pill", style: { backgroundColor: accent + "12", border: "1px solid " + accent + "35" } }, `Week ${state.week}: ${dayObj.weeks[state.week]}`),
+  );
+  if (state.activeTab === "day4") {
+    dayCardBody.appendChild(h("a", { class: "video-link", style: { color: accent }, href: DAY4.lungeMatrixUrl, target: "_blank", rel: "noreferrer" }, "Lunge Matrix video ↗"));
+  }
+  frag.appendChild(h("div", { class: "card" }, h("div", { class: "card-accent-bar", style: { backgroundColor: accent } }), dayCardBody));
 
-    if (state.activeTab === "day1" || state.activeTab === "day3") {
-      const warmupItems = WARMUPS[state.warmupChoice].items;
-      const warmupChecked = Object.fromEntries(Object.entries(state.checked).filter(([k]) => k.startsWith("warmup-")).map(([k, v]) => [k.replace("warmup-", ""), v]));
-      mainHtml += `
-        <div class="card"><div class="card-body">
-          <div class="warmup-header">
-            <h3 style="margin:0">Warm Up</h3>
-            <select class="warmup-select" id="warmupSelect">
-              ${Object.entries(WARMUPS).map(([k, v]) => `<option value="${k}" ${k === state.warmupChoice ? "selected" : ""}>${v.name}</option>`).join("")}
-            </select>
-          </div>
-          ${checklistHtml(warmupItems, warmupChecked, accent, `data-group="warmup"`)}
-        </div></div>`;
-    }
+  frag.appendChild(h("div", { class: "tj-note" }, h("p", { class: "label" }, "Triple Jump Note"), h("p", {}, dayObj.tj)));
 
-    if (totalBoxes > 0 && !dayComplete) {
-      mainHtml += `
-        <div class="progress-row">
-          <div class="progress-track"><div class="progress-fill" style="width:${Math.min(100, (doneBoxes / totalBoxes) * 100)}%;background-color:${accent}"></div></div>
-          <span class="progress-count tabular">${doneBoxes}/${totalBoxes}</span>
-        </div>`;
-    }
-    if (dayComplete) {
-      mainHtml += `<div class="complete-banner" style="background-color:${accent}">${icon("party", { size: 18, color: "#fff" })}<p>Session logged. Nice work.</p></div>`;
-    }
-
-    groups.forEach((g, gi) => {
-      const groupChecked = Object.fromEntries(Object.entries(state.checked).filter(([k]) => k.startsWith(`${gi}-`)).map(([k, v]) => [k.replace(`${gi}-`, ""), v]));
-      mainHtml += `<div class="card"><div class="card-body"><h3>${g.name}</h3>${checklistHtml(g.items, groupChecked, accent, `data-group="${gi}"`)}</div></div>`;
+  if (state.activeTab === "day1" || state.activeTab === "day3") {
+    const select = h("select", { class: "warmup-select" });
+    Object.entries(WARMUPS).forEach(([k, v]) => {
+      const opt = h("option", { value: k }, v.name);
+      if (k === state.warmupChoice) opt.selected = true;
+      select.appendChild(opt);
     });
+    select.addEventListener("change", (e) => { state.warmupChoice = e.target.value; persist(); render(); });
 
-    if (state.activeTab === "day2" && state.week <= 8) {
-      const presets = TIMER_PRESETS.filter((p) => (state.week <= 4 ? p.label.includes("20") : (p.label.includes("30") && p.label.includes("Plyo"))));
-      mainHtml += `
-        <div class="card"><div class="card-body">
-          <div class="timer-header">${icon("timer", { size: 16, color: accent })}<h3 style="margin:0">Plyo Timer</h3></div>
-          <p class="timer-hint">${state.week <= 4 ? "This week uses 20\"/40\" intervals." : "This week uses 30\"/30\" intervals."}</p>
-          <div class="preset-grid">${presets.map((p) => `<button class="preset-btn" style="border:2px solid ${accent};color:${accent}" data-action="open-timer" data-work="${p.work}" data-rest="${p.rest}" data-rounds="${p.rounds}" data-label="${p.label}">${p.label}</button>`).join("")}</div>
-        </div></div>`;
-    }
-    if (groups.some((g) => g.name.includes("Vacation")) || groups.some((g) => g.name.includes("Dudley"))) {
-      const presets = TIMER_PRESETS.filter((p) => p.label.includes("Vacation") || p.label.includes("Dudley"));
-      mainHtml += `
-        <div class="card"><div class="card-body">
-          <div class="timer-header">${icon("timer", { size: 16, color: accent })}<h3 style="margin:0">Circuit Timer</h3></div>
-          <div class="preset-grid">${presets.map((p) => `<button class="preset-btn" style="border:2px solid ${accent};color:${accent}" data-action="open-timer" data-work="${p.work}" data-rest="${p.rest}" data-rounds="${p.rounds}" data-label="${p.label}">${p.label}</button>`).join("")}</div>
-        </div></div>`;
-    }
-  } else {
-    mainHtml += `
-      <div class="card">
-        <div class="card-accent-bar" style="background-color:${accent}"></div>
-        <div class="card-body"><h2>${RECOVERY.full}</h2><p class="desc">${RECOVERY.text}</p></div>
-      </div>
-      <div class="tj-note recovery">${icon("droplet", { size: 18, color: "#2F6F5E" })}<p>${RECOVERY.tj}</p></div>
-      <div class="card"><div class="card-body">
-        <h3>Pick something</h3>
-        <div class="chip-row">${RECOVERY.options.map((o) => `<span class="chip" style="background-color:${accent}12">${o}</span>`).join("")}</div>
-      </div></div>`;
+    const warmupChecked = Object.fromEntries(Object.entries(state.checked).filter(([k]) => k.startsWith("warmup-")).map(([k, v]) => [k.replace("warmup-", ""), v]));
+    const list = Checklist(WARMUPS[state.warmupChoice].items, warmupChecked, accent, (i) => {
+      const key = `warmup-${i}`;
+      state.checked[key] = !state.checked[key];
+      persist();
+      render();
+    });
+    frag.appendChild(h("div", { class: "card" }, h("div", { class: "card-body" },
+      h("div", { class: "warmup-header" }, h("h3", { style: { margin: "0" } }, "Warm Up"), select),
+      list,
+    )));
   }
 
-  // tab bar
-  const tabbarHtml = `
-    <nav class="tabbar">
-      ${TABS.map((key) => {
-        const isActive = state.activeTab === key;
-        const tabAccent = ACCENT[key];
-        return `<button class="tab-btn" data-action="set-tab" data-tab="${key}">
-          ${icon(TAB_ICON[key], { size: 19, color: isActive ? tabAccent : "rgba(20,17,15,0.35)", strokeWidth: isActive ? 2.4 : 1.8 })}
-          <span class="tab-label" style="color:${isActive ? tabAccent : "rgba(20,17,15,0.35)"}">${TAB_DATA[key].label}</span>
-          ${isActive ? `<span class="tab-dash" style="background-color:${tabAccent}"></span>` : ""}
-        </button>`;
-      }).join("")}
-    </nav>`;
+  if (totalBoxes > 0 && !dayComplete) {
+    const fill = h("div", { class: "progress-fill", style: { width: `${Math.min(100, (doneBoxes / totalBoxes) * 100)}%`, backgroundColor: accent } });
+    frag.appendChild(h("div", { class: "progress-row" }, h("div", { class: "progress-track" }, fill), h("span", { class: "progress-count tabular" }, `${doneBoxes}/${totalBoxes}`)));
+  }
+  if (dayComplete) {
+    frag.appendChild(h("div", { class: "complete-banner", style: { backgroundColor: accent } }, Icon("party", 18, "#fff"), h("p", {}, "Session logged. Nice work.")));
+  }
 
-  document.getElementById("app").innerHTML = headerHtml + `<main>${mainHtml}</main>` + tabbarHtml + `<div id="timerModalRoot"></div>`;
-  renderTimerModal();
+  groups.forEach((g, gi) => {
+    const groupChecked = Object.fromEntries(Object.entries(state.checked).filter(([k]) => k.startsWith(`${gi}-`)).map(([k, v]) => [k.replace(`${gi}-`, ""), v]));
+    const list = Checklist(g.items, groupChecked, accent, (i) => {
+      const key = `${gi}-${i}`;
+      state.checked[key] = !state.checked[key];
+      persist();
+      render();
+    });
+    frag.appendChild(h("div", { class: "card" }, h("div", { class: "card-body" }, h("h3", {}, g.name), list)));
+  });
+
+  function timerCard(title, presets) {
+    const grid = h("div", { class: "preset-grid" });
+    presets.forEach((p) => {
+      grid.appendChild(h("button", {
+        class: "preset-btn",
+        style: { border: `2px solid ${accent}`, color: accent },
+        onclick: () => openTimer(p, accent),
+      }, p.label));
+    });
+    return h("div", { class: "card" }, h("div", { class: "card-body" },
+      h("div", { class: "timer-header" }, Icon("timer", 16, accent), h("h3", { style: { margin: "0" } }, title)),
+      grid,
+    ));
+  }
+
+  if (state.activeTab === "day2" && state.week <= 8) {
+    const presets = TIMER_PRESETS.filter((p) => (state.week <= 4 ? p.label.includes("20") : (p.label.includes("30") && p.label.includes("Plyo"))));
+    const card = timerCard("Plyo Timer", presets);
+    card.querySelector(".card-body").insertBefore(
+      h("p", { class: "timer-hint" }, state.week <= 4 ? 'This week uses 20"/40" intervals.' : 'This week uses 30"/30" intervals.'),
+      card.querySelector(".preset-grid"),
+    );
+    frag.appendChild(card);
+  }
+  if (groups.some((g) => g.name.includes("Vacation")) || groups.some((g) => g.name.includes("Dudley"))) {
+    const presets = TIMER_PRESETS.filter((p) => p.label.includes("Vacation") || p.label.includes("Dudley"));
+    frag.appendChild(timerCard("Circuit Timer", presets));
+  }
+
+  return frag;
 }
 
-function renderTimerModal() {
-  const root = document.getElementById("timerModalRoot");
-  if (!root) return;
-  if (!timer) { root.innerHTML = ""; return; }
+function RecoveryMain() {
+  const accent = ACCENT.recovery;
+  const frag = document.createDocumentFragment();
+  frag.appendChild(h("div", { class: "card" },
+    h("div", { class: "card-accent-bar", style: { backgroundColor: accent } }),
+    h("div", { class: "card-body" }, h("h2", {}, RECOVERY.full), h("p", { class: "desc" }, RECOVERY.text)),
+  ));
+  frag.appendChild(h("div", { class: "tj-note recovery" }, Icon("droplet", 18, "#2F6F5E"), h("p", {}, RECOVERY.tj)));
+  const chipRow = h("div", { class: "chip-row" });
+  RECOVERY.options.forEach((o) => chipRow.appendChild(h("span", { class: "chip", style: { backgroundColor: accent + "12" } }, o)));
+  frag.appendChild(h("div", { class: "card" }, h("div", { class: "card-body" }, h("h3", {}, "Pick something"), chipRow)));
+  return frag;
+}
 
+function TabBar() {
+  const nav = h("nav", { class: "tabbar" });
+  TABS.forEach((key) => {
+    const isActive = state.activeTab === key;
+    const tabAccent = ACCENT[key];
+    const color = isActive ? tabAccent : "rgba(20,17,15,0.35)";
+    const btn = h("button", { class: "tab-btn", onclick: () => { state.activeTab = key; loadStateForDay(); render(); } },
+      Icon(TAB_ICON[key], 19, color, isActive ? 2.4 : 1.8),
+      h("span", { class: "tab-label", style: { color } }, TAB_DATA[key].label),
+    );
+    if (isActive) btn.appendChild(h("span", { class: "tab-dash", style: { backgroundColor: tabAccent } }));
+    nav.appendChild(btn);
+  });
+  return nav;
+}
+
+function TimerModal() {
+  if (!timer) return null;
   const totalForPct = timer.phase === "work" ? timer.work : timer.rest;
   const pct = timer.phase === "done" ? 1 : (timer.secondsLeft / totalForPct);
   const phaseColor = timer.phase === "work" ? timer.accent : (timer.phase === "rest" ? "#2F6F5E" : "#8A8478");
   const circumference = 2 * Math.PI * 46;
   const dashoffset = circumference * (1 - (timer.phase === "done" ? 1 : pct));
 
-  root.innerHTML = `
-    <div class="modal-overlay">
-      <div class="modal-box">
-        <div class="modal-top">
-          <p>${timer.label}</p>
-          <button data-action="close-timer">Close</button>
-        </div>
-        <div class="ring-wrap">
-          <svg viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="46" fill="none" stroke="#E4DFD2" stroke-width="6"/>
-            <circle cx="50" cy="50" r="46" fill="none" stroke="${phaseColor}" stroke-width="6"
-              stroke-dasharray="${circumference}" stroke-dashoffset="${dashoffset}" stroke-linecap="round"
-              style="transition: stroke-dashoffset 1s linear"/>
-          </svg>
-          <div class="ring-center">
-            <span class="ring-time tabular">${timer.phase === "done" ? "GO" : timer.secondsLeft}</span>
-            <span class="ring-phase" style="color:${phaseColor}">${timer.phase === "done" ? "Complete" : timer.phase}</span>
-          </div>
-        </div>
-        <p class="round-label">Round ${Math.min(timer.round, timer.rounds)} / ${timer.rounds}</p>
-        <div class="modal-controls">
-          <button class="round-btn" data-action="reset-timer">${icon("rotate-ccw", { size: 18, color: "#14110F" })}</button>
-          <button class="play-btn" style="background-color:${timer.accent}" data-action="toggle-timer" ${timer.phase === "done" ? "disabled" : ""}>
-            ${icon(timer.running ? "pause" : "play", { size: 22, color: "#fff" })}
-          </button>
-          <div style="width:52px"></div>
-        </div>
-      </div>
-    </div>`;
+  const svgNs = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNs, "svg");
+  svg.setAttribute("viewBox", "0 0 100 100");
+  const bgCircle = document.createElementNS(svgNs, "circle");
+  bgCircle.setAttribute("cx", "50"); bgCircle.setAttribute("cy", "50"); bgCircle.setAttribute("r", "46");
+  bgCircle.setAttribute("fill", "none"); bgCircle.setAttribute("stroke", "#E4DFD2"); bgCircle.setAttribute("stroke-width", "6");
+  const fgCircle = document.createElementNS(svgNs, "circle");
+  fgCircle.setAttribute("cx", "50"); fgCircle.setAttribute("cy", "50"); fgCircle.setAttribute("r", "46");
+  fgCircle.setAttribute("fill", "none"); fgCircle.setAttribute("stroke", phaseColor); fgCircle.setAttribute("stroke-width", "6");
+  fgCircle.setAttribute("stroke-dasharray", String(circumference));
+  fgCircle.setAttribute("stroke-dashoffset", String(dashoffset));
+  fgCircle.setAttribute("stroke-linecap", "round");
+  fgCircle.style.transition = "stroke-dashoffset 1s linear";
+  svg.appendChild(bgCircle); svg.appendChild(fgCircle);
+
+  const ringCenter = h("div", { class: "ring-center" },
+    h("span", { class: "ring-time tabular" }, timer.phase === "done" ? "GO" : String(timer.secondsLeft)),
+    h("span", { class: "ring-phase", style: { color: phaseColor } }, timer.phase === "done" ? "Complete" : timer.phase),
+  );
+  const ringWrap = h("div", { class: "ring-wrap" });
+  ringWrap.appendChild(svg);
+  ringWrap.appendChild(ringCenter);
+
+  const playBtn = h("button", {
+    class: "play-btn",
+    style: { backgroundColor: timer.accent },
+    onclick: toggleTimer,
+  }, Icon(timer.running ? "pause" : "play", 22, "#fff"));
+  if (timer.phase === "done") playBtn.disabled = true;
+
+  return h("div", { class: "modal-overlay" },
+    h("div", { class: "modal-box" },
+      h("div", { class: "modal-top" }, h("p", {}, timer.label), h("button", { onclick: closeTimer }, "Close")),
+      ringWrap,
+      h("p", { class: "round-label" }, `Round ${Math.min(timer.round, timer.rounds)} / ${timer.rounds}`),
+      h("div", { class: "modal-controls" },
+        h("button", { class: "round-btn", onclick: resetTimer }, Icon("rotate-ccw", 18, "#14110F")),
+        playBtn,
+        h("div", { style: { width: "52px" } }),
+      ),
+    ),
+  );
 }
 
 /* ---------------------------------------------------------------
-   EVENTS — delegated, so no re-binding needed after re-render
+   RENDER
 ----------------------------------------------------------------*/
-document.addEventListener("click", (e) => {
-  const el = e.target.closest("[data-action]");
-  if (!el) return;
-  const action = el.dataset.action;
-
-  if (action === "set-week") { state.week = Number(el.dataset.week); loadStateForDay(); render(); }
-  else if (action === "week-prev") { state.week = Math.max(1, state.week - 1); loadStateForDay(); render(); }
-  else if (action === "week-next") { state.week = Math.min(11, state.week + 1); loadStateForDay(); render(); }
-  else if (action === "set-tab") { state.activeTab = el.dataset.tab; loadStateForDay(); render(); }
-  else if (action === "toggle") {
-    const key = `${el.dataset.group}-${el.dataset.index}`;
-    state.checked[key] = !state.checked[key];
-    persist();
-    render();
-  }
-  else if (action === "open-timer") {
-    openTimer({ work: Number(el.dataset.work), rest: Number(el.dataset.rest), rounds: Number(el.dataset.rounds), label: el.dataset.label }, ACCENT[state.activeTab]);
-  }
-  else if (action === "close-timer") { closeTimer(); }
-  else if (action === "toggle-timer") { toggleTimer(); }
-  else if (action === "reset-timer") { resetTimer(); }
-});
-
-document.addEventListener("change", (e) => {
-  if (e.target.id === "warmupSelect") {
-    state.warmupChoice = e.target.value;
-    persist();
-    render();
-  }
-});
+function render() {
+  const root = document.getElementById("app");
+  root.innerHTML = "";
+  root.appendChild(Header());
+  const main = h("main", {});
+  main.appendChild(state.activeTab === "recovery" ? RecoveryMain() : DayMain());
+  root.appendChild(main);
+  root.appendChild(TabBar());
+  const modal = TimerModal();
+  if (modal) root.appendChild(modal);
+}
 
 /* ---------------------------------------------------------------
    INIT
