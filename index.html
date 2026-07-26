@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+<title>T&F Summer Training</title>
+
+<!-- PWA / installability -->
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#14110F" />
+<link rel="icon" href="icons/icon-192.png" />
+
+<!-- iOS "Add to Home Screen" support -->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="T&F" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; background: #F5F1E8; overscroll-behavior-y: none; }
+  body { font-family: 'Inter', sans-serif; }
+  #root { min-height: 100vh; }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  ::selection { background: #C1440E33; }
+</style>
+
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="react" data-type="module">
+const { useState, useEffect, useRef, useCallback } = React;
+
+/* ---------- minimal inline icon set (no external icon library needed) ---------- */
+function Icon({ name, size = 18, color = "currentColor", strokeWidth = 2 }) {
+  const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: color, strokeWidth, strokeLinecap: "round", strokeLinejoin: "round" };
+  switch (name) {
+    case "check": return <svg {...common}><polyline points="20 6 9 17 4 12" /></svg>;
+    case "timer": return <svg {...common}><circle cx="12" cy="13" r="8" /><path d="M12 9v4l3 2" /><path d="M9 2h6" /></svg>;
+    case "play": return <svg {...common} fill={color} stroke="none"><polygon points="6 3 20 12 6 21 6 3" /></svg>;
+    case "pause": return <svg {...common} fill={color} stroke="none"><rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" /></svg>;
+    case "rotate-ccw": return <svg {...common}><path d="M1 4v6h6" /><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" /></svg>;
+    case "chevron-left": return <svg {...common}><polyline points="15 18 9 12 15 6" /></svg>;
+    case "chevron-right": return <svg {...common}><polyline points="9 18 15 12 9 6" /></svg>;
+    case "zap": return <svg {...common} fill={color} stroke="none"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>;
+    case "refresh-cw": return <svg {...common}><path d="M23 4v6h-6" /><path d="M1 20v-6h6" /><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10" /><path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14" /></svg>;
+    case "mountain": return <svg {...common}><path d="M3 20l7-11 4 6 3-4 4 9H3z" /></svg>;
+    case "move": return <svg {...common}><path d="M4 12h16" /><path d="M4 12l4-4M4 12l4 4" /><path d="M20 12l-4-4M20 12l-4 4" /><path d="M12 4v16" /></svg>;
+    case "leaf": return <svg {...common}><path d="M11 20A7 7 0 0 1 4 13c0-5 8-11 15-11 0 8-4 18-8 18z" /><path d="M4 13c4 0 8-2 11-9" /></svg>;
+    case "droplet": return <svg {...common}><path d="M12 2s6 7.5 6 12a6 6 0 0 1-12 0c0-4.5 6-12 6-12z" /></svg>;
+    case "party": return <svg {...common}><path d="M5 3l3 3M9 2l1 4M2 9l4 1" /><path d="M4 20l10-4L6 6z" /><circle cx="18" cy="6" r="1" fill={color} /><circle cx="20" cy="12" r="1" fill={color} /></svg>;
+    default: return null;
+  }
+}
+
+/* ---------------------------------------------------------------
+   DATA — Northeastern Summer Training Package, annotated for triple jump.
+----------------------------------------------------------------*/
+const WEEKS = Array.from({ length: 11 }, (_, i) => i + 1);
+
+const ACCENT = { day1: "#C1440E", day2: "#3E6E92", day3: "#6B4A2C", day4: "#B8862E", recovery: "#2F6F5E" };
+const TAB_ICON = { day1: "zap", day2: "refresh-cw", day3: "mountain", day4: "move", recovery: "leaf" };
+
+const CIRCUITS = {
+  gc1: { name: "General Circuit 1", items: ["Push Ups","Prisoner Squats","V-Sits","Back Hypers","Toe Touch","Rocket Jumps","Dips","L-Overs (L+R)","Single Leg Squats (R)","Single Leg Squats (L)","Russian Twist (feet off ground)","Bunny Hops","Prone Opposite Arm/Leg Lifts","Crunches"] },
+  gc2: { name: "General Circuit 2", items: ["Incline Push Ups","Single Leg Squats","Crunches","Decline Push Ups","Side Crunch (L)","Side Crunch (R)","Single Leg Toe Raises (R)","Single Leg Toe Raises (L)","Rocket Jumps","Back Hypers w/ Twist","Glute Bridge","Crunches","Mountain Climbers","Line Hops"] },
+  gc3: { name: "General Circuit 3", items: ["Toe Touches","Lunge Jumps","Back Hyper","Tuck Jumps","Bicycle Crunches","Squat Jumps","Push Ups","Sky Divers","Rocket Jumps","Side Crunches (L)","Side Crunch (R)","Single Leg Donkey Kicks (L)","Single Leg Donkey Kicks (R)","L-Overs","Line Hops","Alternating V-Sits"] },
+  gc4: { name: "General Circuit 4", items: ["Squats","Incline Push Ups","Pogo Jumps","Hip Thrust","Lunges Forward","Jumping Jacks","Push Ups","V-Sit Ups","Lunges Lateral","Burpees","Sit Ups","Mountain Climbers","Decline Push Ups","Bicycle Crunches","Star Jump","Russian Twist"] },
+  running: { name: "Running Circuit", items: ["Stride 200m","25 Crunches","25 Push Ups","Stride 100m","25 Back Hypers","10 L-Overs each side","Stride 100m","Lunges (10 out, 10 back)","25 Side Crunches","25 Side Crunches (opp. side)","Stride 200m","— rest 3', repeat 2x more —"] },
+  vacation: { name: "Vacation Circuit (30\" on / 30\" rest)", items: ["V-Sit Ups","100m Run","Push Ups","200m Run","Mountain Climbers","100m Run","Lateral Squats (L+R)","200m Run","Hip Extenders/Thrust","100m Run","Sit Ups","200m Run","Squats","100m Run","Side-Ups (L+R)","200m Run","Burpees","100m Run","Single Leg Squats (L+R)","200m Run"] },
+  dudley: { name: "Dudley Circuit (30\" work / 15\" rest)", items: ["Push Ups","Calf Raises","Push Up (Diamond)","Superman","60\" Sprint @ 70%","Sit Ups","Mountain Climbers","Sit Ups","60\" Sprint @ 70%","Squat Walk Forward","Burpees","Squat Walk Backward","Pogo Jumps","Forward Lunge","60\" Sprint @ 70%","Backward Lunge","Frog Jumps","Lateral Squats","V-Sit Ups","60\" Sprint @ 70%"] },
+};
+
+const WARMUPS = {
+  circuitA: { name: "Circuit Warm Up", items: [
+    "Barefoot Prep: tiptoes fwd/bkwd, in, out, arches, sides, heel walk, toe-grab shuffle",
+    "Joint Mobility: ankle/knee/hip circles, trunk rotations, 4-way neck stretch, wrist circles",
+    "10 Prisoner Squats", "10 Front Lunges", "20 Wide Outs", "20 Crunches",
+    "→ 3x 50m Build-ups w/ Skip Return",
+    "10 Side Lunges", "10 Alt. Side Lunges", "10 Kneeling Trail Leg Circles (fwd & bkw)", "10 Fire Hydrants",
+    "→ 3x Marching Run w/ Low Skip + Scoop Return",
+    "20 Scissor Splits", "10 Donkey Kicks", "10 Lead & Trail Leg Lifts", "20 Lateral Splits",
+    "→ 3x 50m Build-ups w/ Side Slide Return",
+    "10 Single Leg Donkey Kicks", "10 Drop Squats", "10 Mogul Jumps", "20 Ankle Pops",
+    "→ 3x 50m Straight Leg Run w/ Backwards Skip Return",
+    "20 High-Low Bicycle (10+10)", "10 In Place A-Skips", "10 Scorpions", "10 Push Ups w/ Clap",
+    "→ 3x 50m Build-ups w/ Walk Return",
+  ]},
+  circuitB: { name: "Circuit Warm Up B", items: [
+    "10 Quarter Squats", "10 Diagonal Lunges (5 each side)", "20 Mountain Climbers (10 each side)", "20 In-Place Ankle Pops",
+    "→ 3x 50m Build-ups w/ Forward Skip Return",
+    "10 Side Lunges (5 each side)", "5 Walk Ups (push up to pike)", "10 Kneeling Trail Leg Circles (fwd & bkw)", "10 Fire Hydrants",
+    "→ 3x 50m Marching Run w/ Backward Skip Return",
+    "10 Scissor Splits", "10 Lateral Splits", "10 Lead & Trail Leg Lifts (5 each)", "10 SL Glute Bridge w/ leg across knee (5 each)",
+    "→ 4x 50m Build-ups w/ Side Slide Return (alternate)",
+    "10 Prisoner Squats", "10 Mogul Jumps", "10 Lateral Partner Leg Swings", "10 Linear Partner Leg Swings",
+    "→ 3x 50m SLBs w/ Sprinter Jog Return",
+    "20 High-Low Bicycle (10+10)", "10 In Place A-Skips", "10 Scorpions", "10 Push Ups w/ Clap",
+    "→ 3x 50m Build-ups w/ Walk Return",
+  ]},
+  studly: { name: "Studly Warm Up", items: [
+    "1 mile at/under 7-8' pace", "Forward Hip Circles (10 each side)", "25 Push Ups", "50m Skip (windmill R arm)", "25 Sit Ups",
+    "Scorpions (10 each side)", "25 Push Ups", "50m Skip (windmill L arm)", "25 Sit Ups",
+    "Iron Crosses (10 each side)", "25 Push Ups", "50m Side Shuffle", "25 Sit Ups",
+    "Fire Hydrant (10 each leg)", "25 Push Ups", "50m A-Skips OR Marching Run", "25 Sit Ups",
+    "Extenders on all fours (10 each leg)", "25 Push Ups", "50m Carioca", "25 Sit Ups",
+    "Hurdle Stretch (10 knee pickup)", "25 Push Ups", "50m Carioca Step-Overs OR Lateral A-Skip", "25 Sit Ups",
+    "Hurdle Stretch (10 lead-leg pickup)", "25 Push Ups", "50m Straight Leg Shuffle", "25 Sit Ups",
+    "50m Backwards Skip (heel recovery)", "25 Push Ups", "50m Straight Leg Bounds OR Alt. Fast Leg", "25 Sit Ups",
+    "50m B-Skips OR High Knee", "25 Prisoner Squats", "15 Rocket Jumps", "50m Lunges", "15 Burpees",
+    "Get Water", "4x 50m Accelerations (60-90%)", "Dynamic Mobility (linear CBC + lateral leg swings)", "Individual + partner stretch",
+    "2x 50m Accelerations (95-100%)", "Get Water",
+  ]},
+};
+
+const DAY1 = {
+  label: "Speed", full: "Day 1 — Speed",
+  base: "Jog 1 mile + stretch for cool down after the workout.",
+  weeks: {
+    1:"10 x 100m (sprint up + jog back, 1' recovery)",2:"10 x 100m (sprint up + jog back, 1' recovery)",3:"10 x 100m (sprint up + jog back, 1' recovery)",
+    4:"12 x 100m (sprint up + jog back, 1' recovery)",5:"12 x 100m (sprint up + jog back, 1' recovery)",6:"12 x 100m (sprint up + jog back, 1' recovery)",
+    7:"3 x (3-4 Cross Fields) — sprint across field, walk/jog to sideline, 4' rest between sets",
+    8:"3 x (3-4 Cross Fields) — sprint across field, walk/jog to sideline, 4' rest between sets",
+    9:"3 x (3-4 Cross Fields) — sprint across field, walk/jog to sideline, 4' rest between sets",
+    10:"Taper: repeat Wk7-9 pattern at your discretion, prioritize freshness",
+    11:"Taper: repeat Wk7-9 pattern at your discretion, prioritize freshness",
+  },
+  tj: "Full sprint volume is fine — this is direct speed work for your approach. Just don't stack a max-effort sprint day right before/after a heavy bounding day if you can help it; ankles and Achilles need the recovery gap.",
+};
+
+const DAY2 = {
+  label: "Circuits", full: "Day 2 — Circuits & Plyo",
+  base: "Complete a 20-30' run or machine interval before the circuits below.",
+  weeks: {
+    1:"2x General Circuit 1 @ 10-12 reps + 2x Mercury @ 20\"/40\"",
+    2:"2x General Circuit 2 @ 10-12 reps + 2x Venus @ 20\"/40\"",
+    3:"2x General Circuit 3 @ 12-14 reps + 2x Mars @ 20\"/40\"",
+    4:"2x General Circuit 4 @ 12-14 reps + 2x Bounding Series A @ 20\"/40\"",
+    5:"2x GC1 + 1x GC2 @ 10-12 reps + 2x Mercury @ 30\"/30\"",
+    6:"2x GC3 + 1x GC4 @ 10-12 reps + 2x Venus @ 30\"/30\"",
+    7:"2x GC2 + 1x GC3 @ 12-14 reps + 2x Mars @ 30\"/30\"",
+    8:"2x GC4 + 1x GC1 @ 12-14 reps + 2x Bounding Series A @ 30\"/30\"",
+    9:"1x Circuit Warm Up",
+    10:"1x Circuit Warm Up B",
+    11:"Light circuit of your choice — pre-season taper",
+  },
+  tj: "When you're short on time, do the bounding/plyo block first and full-effort — that's the piece most specific to your event. The general circuits (GC1-4) are conditioning filler; trim reps there before you trim the plyo.",
+};
+
+const DAY3 = {
+  label: "Hills", full: "Day 3 — Hills",
+  base: "Run 1 mile cool down after the workout. Rest: walk/jog back each rep, 30-60\", 5' between sets if applicable.",
+  weeks: {
+    1:"2 x 4 Over 100m Hills",2:"2 x 5 Over 100m Hills",3:"8 x Over 100m Hills",4:"10 x Over 100m Hills",5:"12 x Over 100m Hills",
+    6:"2 x 7 Over 100m Hills",7:"2 x 8 Over 100m Hills",8:"2 x 9 Over 100m Hills",9:"3 x 4-5 Over 100m Hills",10:"3 x 5-6 Over 100m Hills",
+    11:"Taper: 2 x 4-5 Over 100m Hills, focus on drive phase",
+  },
+  tj: "This is the highest-impact day on your joints of the whole week. If your legs feel beat up, cut volume ~20-25% here first — not on your plyo/bounding day. Worth a direct check-in with Coach Powell on hill volume given your event.",
+};
+
+const DAY4 = {
+  label: "Lunge", full: "Day 4 — Lunge Matrix & Circuit",
+  base: "Run 1 mile before the workout. Jog 1 mile cool down after.",
+  weeks: {
+    1:"1x Lunge Matrix + Running Circuit",2:"1x Lunge Matrix + Vacation Circuit",3:"1x Lunge Matrix + Dudley Circuit",
+    4:"2x Lunge Matrix + Running Circuit",5:"2x Lunge Matrix + Vacation Circuit",6:"2x Lunge Matrix + Dudley Circuit",
+    7:"1x Circuit Warm Up + Running Circuit",8:"1x Circuit Warm Up B + Running Circuit",
+    9:"1x Circuit Warm Up + Vacation Circuit",10:"1x Circuit Warm Up B + Vacation Circuit",
+    11:"1x Circuit Warm Up + Dudley Circuit",
+  },
+  tj: "Good day to add short approach pop-ups (3-5 step run-in → hop-step-jump) after the circuit if you have access to a pit or soft landing — keeps rhythm sharp without more high hill/plyo impact.",
+  lungeMatrixUrl: "https://youtu.be/GJo7_MiRLkU",
+};
+
+const RECOVERY = {
+  label: "Recovery", full: "Days 5-7 — Active Recovery",
+  text: "1-2x 20-30' easy recovery run. Use these days for you — mentally, physically, emotionally.",
+  options: ["Meditate","Mobility / Stretch","Yoga","Pilates","Hike","Bike","Swim","Dance","Recovery Run","Cold/Hot Tub","Sauna","MB Circuit","PT","Chiropractor","Massage","Travel","Read","Sing","Relax","Cook"],
+  tj: "Don't skip the ice baths (2x/week recommended) — triple jump landings add up fast over a week of hills + bounding. This is where you protect next week's training, not lose fitness.",
+};
+
+const DAYS = [
+  { key: "day1", data: DAY1 },
+  { key: "day2", data: DAY2 },
+  { key: "day3", data: DAY3 },
+  { key: "day4", data: DAY4 },
+];
+const TABS = [...DAYS, { key: "recovery", data: RECOVERY }];
+
+function circuitsForDay(dayKey, week) {
+  if (dayKey === "day2") {
+    if (week === 9) return [WARMUPS.circuitA];
+    if (week === 10) return [WARMUPS.circuitB];
+    const map = { 1:["gc1"],2:["gc2"],3:["gc3"],4:["gc4"],5:["gc1","gc2"],6:["gc3","gc4"],7:["gc2","gc3"],8:["gc4","gc1"] };
+    return (map[week] || []).map((k) => CIRCUITS[k]);
+  }
+  if (dayKey === "day4") {
+    const text = DAY4.weeks[week] || "";
+    const out = [];
+    if (text.includes("Running Circuit")) out.push(CIRCUITS.running);
+    if (text.includes("Vacation Circuit")) out.push(CIRCUITS.vacation);
+    if (text.includes("Dudley Circuit")) out.push(CIRCUITS.dudley);
+    if (text.includes("Circuit Warm Up B")) out.push(WARMUPS.circuitB);
+    else if (text.includes("Circuit Warm Up")) out.push(WARMUPS.circuitA);
+    return out;
+  }
+  return [];
+}
+
+/* ---------------------------------------------------------------
+   local persistence — plain localStorage (this is a real deployed
+   app, not a claude.ai artifact, so browser storage is fine here)
+----------------------------------------------------------------*/
+function loadProgress(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) { return null; }
+}
+function saveProgress(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* ignore */ }
+}
+
+/* ---------------------------------------------------------------
+   TIMER
+----------------------------------------------------------------*/
+function beep(freq = 880, dur = 0.12) {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.frequency.value = freq;
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    gain.gain.setValueAtTime(0.001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.2, ctx.currentTime + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+    osc.start();
+    osc.stop(ctx.currentTime + dur + 0.02);
+  } catch (e) { /* ignore */ }
+}
+
+function IntervalTimer({ presetLabel, work, rest, rounds, accent, onClose }) {
+  const [round, setRound] = useState(1);
+  const [phase, setPhase] = useState("work");
+  const [secondsLeft, setSecondsLeft] = useState(work);
+  const [running, setRunning] = useState(false);
+  const intervalRef = useRef(null);
+
+  useEffect(() => {
+    if (!running) return;
+    intervalRef.current = setInterval(() => {
+      setSecondsLeft((s) => {
+        if (s <= 1) {
+          if (phase === "work") {
+            beep(660);
+            if (rest > 0) { setPhase("rest"); return rest; }
+            if (round >= rounds) { setPhase("done"); setRunning(false); beep(440,0.3); return 0; }
+            setRound((r) => r + 1); return work;
+          } else if (phase === "rest") {
+            if (round >= rounds) { setPhase("done"); setRunning(false); beep(440,0.3); return 0; }
+            beep(990);
+            setRound((r) => r + 1);
+            setPhase("work");
+            return work;
+          }
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+    return () => clearInterval(intervalRef.current);
+  }, [running, phase, round, work, rest, rounds]);
+
+  const reset = () => { setRunning(false); setRound(1); setPhase("work"); setSecondsLeft(work); };
+  const pct = phase === "work" ? (secondsLeft / work) : phase === "rest" ? (secondsLeft / rest) : 0;
+  const phaseColor = phase === "work" ? accent : phase === "rest" ? "#2F6F5E" : "#8A8478";
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4" style={{position:"fixed",top:0,left:0,right:0,bottom:0,zIndex:50,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(0,0,0,0.7)",padding:16}}>
+      <div style={{width:"100%",maxWidth:384,borderRadius:16,background:"#F5F1E8",padding:24,boxShadow:"0 25px 50px rgba(0,0,0,0.4)",border:"2px solid #14110F"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
+          <p style={{fontFamily:"'Oswald'",textTransform:"uppercase",letterSpacing:1,fontSize:14,color:"#8A8478",margin:0}}>{presetLabel}</p>
+          <button onClick={onClose} style={{background:"none",border:"none",color:"rgba(20,17,15,0.6)",fontSize:14,cursor:"pointer"}}>Close</button>
+        </div>
+
+        <div style={{position:"relative",margin:"0 auto 20px",height:192,width:192}}>
+          <svg viewBox="0 0 100 100" style={{height:"100%",width:"100%",transform:"rotate(-90deg)"}}>
+            <circle cx="50" cy="50" r="46" fill="none" stroke="#E4DFD2" strokeWidth="6" />
+            <circle
+              cx="50" cy="50" r="46" fill="none" stroke={phaseColor} strokeWidth="6"
+              strokeDasharray={2 * Math.PI * 46}
+              strokeDashoffset={2 * Math.PI * 46 * (1 - (phase === "done" ? 1 : pct))}
+              strokeLinecap="round"
+              style={{ transition: "stroke-dashoffset 1s linear" }}
+            />
+          </svg>
+          <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+            <span className="tabular-nums" style={{fontFamily:"'Oswald'",fontSize:48,fontWeight:600,color:"#14110F"}}>
+              {phase === "done" ? "GO" : secondsLeft}
+            </span>
+            <span style={{marginTop:4,fontSize:12,textTransform:"uppercase",letterSpacing:2,color:phaseColor}}>
+              {phase === "done" ? "Complete" : phase}
+            </span>
+          </div>
+        </div>
+
+        <p style={{textAlign:"center",fontSize:14,color:"rgba(20,17,15,0.7)",marginBottom:16}}>Round {Math.min(round, rounds)} / {rounds}</p>
+
+        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:12}}>
+          <button onClick={reset} style={{borderRadius:"999px",border:"2px solid #14110F",padding:12,background:"none",cursor:"pointer"}}>
+            <Icon name="rotate-ccw" size={18} color="#14110F" />
+          </button>
+          <button
+            onClick={() => setRunning((r) => !r)}
+            disabled={phase === "done"}
+            style={{backgroundColor:accent,borderRadius:"999px",padding:16,color:"#fff",border:"none",boxShadow:"0 10px 20px rgba(0,0,0,0.2)",cursor:"pointer",opacity:phase==="done"?0.4:1}}
+          >
+            <Icon name={running ? "pause" : "play"} size={22} color="#fff" />
+          </button>
+          <div style={{width:52}} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const TIMER_PRESETS = [
+  { label: "Plyo 20\"/40\"", work: 20, rest: 40, rounds: 6 },
+  { label: "Plyo 30\"/30\"", work: 30, rest: 30, rounds: 6 },
+  { label: "Vacation 30\"/30\"", work: 30, rest: 30, rounds: 10 },
+  { label: "Dudley 30\"/15\"", work: 30, rest: 15, rounds: 10 },
+];
+
+/* ---------------------------------------------------------------
+   CHECKLIST
+----------------------------------------------------------------*/
+function Checklist({ items, checkedMap, onToggle, accent }) {
+  return (
+    <ul style={{listStyle:"none",margin:0,padding:0,display:"flex",flexDirection:"column",gap:4}}>
+      {items.map((item, i) => {
+        const isArrow = item.startsWith("→");
+        const done = !!checkedMap[i];
+        if (isArrow) {
+          return (
+            <li key={i} style={{paddingLeft:4,paddingTop:6,paddingBottom:6,fontSize:11,textTransform:"uppercase",letterSpacing:0.5,color:"#8A6A52",fontWeight:600}}>
+              {item}
+            </li>
+          );
+        }
+        return (
+          <li key={i}>
+            <button
+              onClick={() => onToggle(i)}
+              style={{display:"flex",width:"100%",alignItems:"flex-start",gap:10,borderRadius:8,padding:"6px 8px",textAlign:"left",background:"none",border:"none",cursor:"pointer"}}
+            >
+              <span style={{marginTop:2,display:"flex",height:18,width:18,flex:"none",alignItems:"center",justifyContent:"center",borderRadius:"999px",border:`2px solid ${done ? accent : "rgba(20,17,15,0.25)"}`,backgroundColor: done ? accent : "transparent"}}>
+                {done && <Icon name="check" size={11} color="#fff" strokeWidth={3.5} />}
+              </span>
+              <span style={{fontSize:14,lineHeight:1.4,paddingTop:1,color: done ? "rgba(20,17,15,0.35)" : "#14110F", textDecoration: done ? "line-through" : "none"}}>
+                {item}
+              </span>
+            </button>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+/* ---------------------------------------------------------------
+   MAIN APP
+----------------------------------------------------------------*/
+function App() {
+  const [week, setWeek] = useState(1);
+  const [activeTab, setActiveTab] = useState("day1");
+  const [warmupChoice, setWarmupChoice] = useState("circuitA");
+  const [checked, setChecked] = useState({});
+  const [timerPreset, setTimerPreset] = useState(null);
+
+  const dayObj = DAYS.find((d) => d.key === activeTab)?.data;
+  const isRecovery = activeTab === "recovery";
+  const accent = ACCENT[activeTab];
+  const storageKey = `progress:w${week}:${activeTab}`;
+
+  useEffect(() => {
+    const val = loadProgress(storageKey);
+    if (val) {
+      setChecked(val.checked || {});
+      if (val.warmupChoice) setWarmupChoice(val.warmupChoice);
+    } else {
+      setChecked({});
+    }
+  }, [storageKey]);
+
+  const persist = useCallback((nextChecked, nextWarmup) => {
+    saveProgress(storageKey, { checked: nextChecked, warmupChoice: nextWarmup ?? warmupChoice });
+  }, [storageKey, warmupChoice]);
+
+  const toggleItem = (groupIdx, itemIdx) => {
+    setChecked((prev) => {
+      const key = `${groupIdx}-${itemIdx}`;
+      const next = { ...prev, [key]: !prev[key] };
+      persist(next);
+      return next;
+    });
+  };
+
+  const groups = isRecovery ? [] : circuitsForDay(activeTab, week);
+  const totalBoxes = isRecovery ? 0 : groups.reduce((sum, g) => sum + g.items.filter((it) => !it.startsWith("→")).length, 0);
+  const doneBoxes = Object.values(checked).filter(Boolean).length;
+  const dayComplete = totalBoxes > 0 && doneBoxes >= totalBoxes;
+
+  return (
+    <div style={{minHeight:"100vh",background:"#F5F1E8",color:"#14110F"}}>
+      {/* HEADER */}
+      <header style={{background:"#14110F",padding:"24px 20px 16px",color:"#F5F1E8"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+          <div>
+            <p style={{fontSize:10,textTransform:"uppercase",letterSpacing:3,fontWeight:600,color:accent,margin:0}}>Northeastern Track &amp; Field</p>
+            <h1 style={{fontFamily:"'Oswald'",fontSize:24,fontWeight:600,textTransform:"uppercase",letterSpacing:1,lineHeight:1.2,margin:"2px 0 0"}}>Summer Training</h1>
+            <p style={{fontSize:12,color:"rgba(245,241,232,0.45)",margin:"2px 0 0"}}>Triple Jump build</p>
+          </div>
+          <div style={{display:"flex",flexDirection:"column",alignItems:"center",borderRadius:8,border:"1px solid rgba(245,241,232,0.2)",padding:"6px 12px",minWidth:52}}>
+            <span style={{fontSize:9,textTransform:"uppercase",letterSpacing:2,color:"rgba(245,241,232,0.45)"}}>Wk</span>
+            <span className="tabular-nums" style={{fontFamily:"'Oswald'",fontSize:20,fontWeight:600}}>{week}</span>
+          </div>
+        </div>
+
+        <div style={{marginTop:20}}>
+          <div style={{display:"flex",alignItems:"center",gap:4}}>
+            <button onClick={() => setWeek((w) => Math.max(1, w - 1))} style={{padding:4,background:"none",border:"none",color:"rgba(245,241,232,0.5)",cursor:"pointer"}} aria-label="Previous week">
+              <Icon name="chevron-left" size={18} color="rgba(245,241,232,0.5)" />
+            </button>
+            <div style={{flex:1}}>
+              <div style={{display:"flex",gap:3}}>
+                {WEEKS.map((w) => (
+                  <button
+                    key={w}
+                    onClick={() => setWeek(w)}
+                    style={{position:"relative",flex:1,height:28,borderRadius:3,overflow:"hidden",border:"none",cursor:"pointer",
+                      backgroundColor: w === week ? accent : w < week ? "#3A362F" : "#F5F1E8",
+                      opacity: w === week ? 1 : w < week ? 1 : 0.14}}
+                    aria-label={`Week ${w}`}
+                  >
+                    {w === week && (
+                      <span style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,color:"#fff",fontFamily:"'Oswald'"}}>
+                        {w}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+              <div style={{display:"flex",gap:3,marginTop:3}}>
+                {WEEKS.map((w) => (
+                  <div key={w} style={{flex:1,display:"flex",justifyContent:"center"}}>
+                    <div style={{width:1,background:"rgba(245,241,232,0.25)",height: w % 5 === 0 ? 6 : 3}} />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <button onClick={() => setWeek((w) => Math.min(11, w + 1))} style={{padding:4,background:"none",border:"none",cursor:"pointer"}} aria-label="Next week">
+              <Icon name="chevron-right" size={18} color="rgba(245,241,232,0.5)" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* MAIN */}
+      <main style={{padding:"20px 20px 112px",display:"flex",flexDirection:"column",gap:16}}>
+        {!isRecovery && (
+          <React.Fragment>
+            <div style={{borderRadius:12,background:"#fff",overflow:"hidden",border:"1px solid rgba(20,17,15,0.1)"}}>
+              <div style={{height:4,backgroundColor:accent}} />
+              <div style={{padding:16}}>
+                <h2 style={{fontFamily:"'Oswald'",fontSize:18,fontWeight:600,textTransform:"uppercase",letterSpacing:0.5,margin:0}}>{dayObj.full}</h2>
+                <p style={{marginTop:4,fontSize:14,color:"rgba(20,17,15,0.65)"}}>{dayObj.base}</p>
+                <div style={{marginTop:12,borderRadius:8,padding:"10px 12px",backgroundColor:`${accent}12`,border:`1px solid ${accent}35`}}>
+                  <p style={{fontSize:14,fontWeight:600,margin:0}}>Week {week}: {dayObj.weeks[week]}</p>
+                </div>
+                {activeTab === "day4" && (
+                  <a href={DAY4.lungeMatrixUrl} target="_blank" rel="noreferrer" style={{marginTop:8,display:"inline-block",fontSize:12,color:accent}}>
+                    Lunge Matrix video ↗
+                  </a>
+                )}
+              </div>
+            </div>
+
+            <div style={{borderRadius:12,padding:16,border:"1px solid rgba(47,111,94,0.3)",backgroundColor:"rgba(47,111,94,0.06)"}}>
+              <p style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,fontWeight:700,color:"#2F6F5E",margin:0}}>Triple Jump Note</p>
+              <p style={{marginTop:4,fontSize:14,color:"rgba(20,17,15,0.8)",lineHeight:1.4}}>{dayObj.tj}</p>
+            </div>
+
+            {(activeTab === "day1" || activeTab === "day3") && (
+              <div style={{borderRadius:12,background:"#fff",border:"1px solid rgba(20,17,15,0.1)",padding:16}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <h3 style={{fontFamily:"'Oswald'",fontSize:14,fontWeight:600,textTransform:"uppercase",letterSpacing:0.5,margin:0}}>Warm Up</h3>
+                  <select
+                    value={warmupChoice}
+                    onChange={(e) => { setWarmupChoice(e.target.value); persist(checked, e.target.value); }}
+                    style={{borderRadius:6,border:"1px solid rgba(20,17,15,0.2)",background:"#F5F1E8",padding:"4px 8px",fontSize:12}}
+                  >
+                    {Object.entries(WARMUPS).map(([k, v]) => <option key={k} value={k}>{v.name}</option>)}
+                  </select>
+                </div>
+                <div style={{marginTop:8}}>
+                  <Checklist
+                    items={WARMUPS[warmupChoice].items}
+                    checkedMap={Object.fromEntries(Object.entries(checked).filter(([k]) => k.startsWith("warmup-")).map(([k, v]) => [k.replace("warmup-", ""), v]))}
+                    onToggle={(i) => {
+                      setChecked((prev) => {
+                        const key = `warmup-${i}`;
+                        const next = { ...prev, [key]: !prev[key] };
+                        persist(next);
+                        return next;
+                      });
+                    }}
+                    accent={accent}
+                  />
+                </div>
+              </div>
+            )}
+
+            {totalBoxes > 0 && !dayComplete && (
+              <div style={{display:"flex",alignItems:"center",gap:8}}>
+                <div style={{height:6,flex:1,borderRadius:999,background:"rgba(20,17,15,0.1)",overflow:"hidden"}}>
+                  <div style={{height:"100%",borderRadius:999,backgroundColor:accent,width:`${Math.min(100, (doneBoxes / totalBoxes) * 100)}%`,transition:"width 0.2s"}} />
+                </div>
+                <span className="tabular-nums" style={{fontSize:12,color:"rgba(20,17,15,0.45)"}}>{doneBoxes}/{totalBoxes}</span>
+              </div>
+            )}
+
+            {dayComplete && (
+              <div style={{display:"flex",alignItems:"center",gap:10,borderRadius:12,padding:"12px 16px",backgroundColor:accent}}>
+                <Icon name="party" size={18} color="#fff" />
+                <p style={{fontSize:14,fontWeight:600,color:"#fff",margin:0}}>Session logged. Nice work.</p>
+              </div>
+            )}
+
+            {groups.map((g, gi) => (
+              <div key={gi} style={{borderRadius:12,background:"#fff",border:"1px solid rgba(20,17,15,0.1)",padding:16}}>
+                <h3 style={{fontFamily:"'Oswald'",fontSize:14,fontWeight:600,textTransform:"uppercase",letterSpacing:0.5,margin:"0 0 6px"}}>{g.name}</h3>
+                <Checklist
+                  items={g.items}
+                  checkedMap={Object.fromEntries(Object.entries(checked).filter(([k]) => k.startsWith(`${gi}-`)).map(([k, v]) => [k.replace(`${gi}-`, ""), v]))}
+                  onToggle={(i) => toggleItem(gi, i)}
+                  accent={accent}
+                />
+              </div>
+            ))}
+
+            {activeTab === "day2" && week <= 8 && (
+              <div style={{borderRadius:12,background:"#fff",border:"1px solid rgba(20,17,15,0.1)",padding:16}}>
+                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
+                  <Icon name="timer" size={16} color={accent} />
+                  <h3 style={{fontFamily:"'Oswald'",fontSize:14,fontWeight:600,textTransform:"uppercase",letterSpacing:0.5,margin:0}}>Plyo Timer</h3>
+                </div>
+                <p style={{fontSize:12,color:"rgba(20,17,15,0.55)",marginBottom:12}}>
+                  {week <= 4 ? "This week uses 20\"/40\" intervals." : "This week uses 30\"/30\" intervals."}
+                </p>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                  {TIMER_PRESETS.filter((p) => (week <= 4 ? p.label.includes("20") : p.label.includes("30") && p.label.includes("Plyo"))).map((p) => (
+                    <button
+                      key={p.label}
+                      onClick={() => setTimerPreset(p)}
+                      style={{borderRadius:8,border:`2px solid ${accent}`,padding:"8px 12px",fontSize:12,fontWeight:600,color:accent,background:"none",cursor:"pointer"}}
+                    >
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            {(groups.some((g) => g.name.includes("Vacation")) || groups.some((g) => g.name.includes("Dudley"))) && (
+              <div style={{borderRadius:12,background:"#fff",border:"1px solid rgba(20,17,15,0.1)",padding:16}}>
+                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
+                  <Icon name="timer" size={16} color={accent} />
+                  <h3 style={{fontFamily:"'Oswald'",fontSize:14,fontWeight:600,textTransform:"uppercase",letterSpacing:0.5,margin:0}}>Circuit Timer</h3>
+                </div>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                  {TIMER_PRESETS.filter((p) => p.label.includes("Vacation") || p.label.includes("Dudley")).map((p) => (
+                    <button
+                      key={p.label}
+                      onClick={() => setTimerPreset(p)}
+                      style={{borderRadius:8,border:`2px solid ${accent}`,padding:"8px 12px",fontSize:12,fontWeight:600,color:accent,background:"none",cursor:"pointer"}}
+                    >
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </React.Fragment>
+        )}
+
+        {isRecovery && (
+          <React.Fragment>
+            <div style={{borderRadius:12,background:"#fff",overflow:"hidden",border:"1px solid rgba(20,17,15,0.1)"}}>
+              <div style={{height:4,backgroundColor:accent}} />
+              <div style={{padding:16}}>
+                <h2 style={{fontFamily:"'Oswald'",fontSize:18,fontWeight:600,textTransform:"uppercase",letterSpacing:0.5,margin:0}}>{RECOVERY.full}</h2>
+                <p style={{marginTop:4,fontSize:14,color:"rgba(20,17,15,0.65)"}}>{RECOVERY.text}</p>
+              </div>
+            </div>
+            <div style={{borderRadius:12,padding:16,display:"flex",gap:10,border:"1px solid rgba(47,111,94,0.3)",backgroundColor:"rgba(47,111,94,0.06)"}}>
+              <Icon name="droplet" size={18} color="#2F6F5E" />
+              <p style={{fontSize:14,color:"rgba(20,17,15,0.8)",lineHeight:1.4,margin:0}}>{RECOVERY.tj}</p>
+            </div>
+            <div style={{borderRadius:12,background:"#fff",border:"1px solid rgba(20,17,15,0.1)",padding:16}}>
+              <h3 style={{fontFamily:"'Oswald'",fontSize:14,fontWeight:600,textTransform:"uppercase",letterSpacing:0.5,margin:"0 0 8px"}}>Pick something</h3>
+              <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+                {RECOVERY.options.map((o) => (
+                  <span key={o} style={{borderRadius:999,padding:"4px 12px",fontSize:12,backgroundColor:`${accent}12`,color:"rgba(20,17,15,0.7)"}}>{o}</span>
+                ))}
+              </div>
+            </div>
+          </React.Fragment>
+        )}
+      </main>
+
+      {/* BOTTOM TAB BAR */}
+      <nav style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(255,255,255,0.95)",backdropFilter:"blur(8px)",borderTop:"1px solid rgba(20,17,15,0.1)",display:"flex",paddingBottom:"env(safe-area-inset-bottom, 0px)"}}>
+        {TABS.map((t) => {
+          const isActive = activeTab === t.key;
+          const tabAccent = ACCENT[t.key];
+          return (
+            <button
+              key={t.key}
+              onClick={() => setActiveTab(t.key)}
+              style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:2,padding:"10px 0",background:"none",border:"none",cursor:"pointer"}}
+            >
+              <Icon name={TAB_ICON[t.key]} size={19} color={isActive ? tabAccent : "rgba(20,17,15,0.35)"} strokeWidth={isActive ? 2.4 : 1.8} />
+              <span style={{fontSize:10,fontWeight:600,textTransform:"uppercase",letterSpacing:0.5,color: isActive ? tabAccent : "rgba(20,17,15,0.35)"}}>
+                {t.data.label}
+              </span>
+              {isActive && <span style={{height:3,width:16,borderRadius:999,marginTop:2,backgroundColor:tabAccent}} />}
+            </button>
+          );
+        })}
+      </nav>
+
+      {timerPreset && (
+        <IntervalTimer
+          presetLabel={timerPreset.label}
+          work={timerPreset.work}
+          rest={timerPreset.rest}
+          rounds={timerPreset.rounds}
+          accent={accent}
+          onClose={() => setTimerPreset(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
+</script>
+
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>
