@@ -105,6 +105,7 @@
   .ring-time { font-size: 48px; font-weight: 700; color: #14110F; }
   .ring-phase { margin-top: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; }
   .round-label { text-align: center; font-size: 14px; color: rgba(20,17,15,0.7); margin-bottom: 16px; }
+  .exercise-name { text-align: center; font-size: 16px; font-weight: 700; color: #14110F; margin: 0 0 4px; padding: 0 8px; }
   .modal-controls { display: flex; align-items: center; justify-content: center; gap: 12px; }
   .round-btn { border-radius: 999px; border: 2px solid #14110F; padding: 12px; background: none; cursor: pointer; }
   .play-btn { border-radius: 999px; padding: 16px; color: #fff; border: none; box-shadow: 0 10px 20px rgba(0,0,0,0.2); cursor: pointer; }
@@ -187,6 +188,10 @@ const CIRCUITS = {
   running: { name: "Running Circuit", items: ["Stride 200m","25 Crunches","25 Push Ups","Stride 100m","25 Back Hypers","10 L-Overs each side","Stride 100m","Lunges (10 out, 10 back)","25 Side Crunches","25 Side Crunches (opp. side)","Stride 200m","— rest 3', repeat 2x more —"] },
   vacation: { name: 'Vacation Circuit (30" on / 30" rest)', items: ["V-Sit Ups","100m Run","Push Ups","200m Run","Mountain Climbers","100m Run","Lateral Squats (L+R)","200m Run","Hip Extenders/Thrust","100m Run","Sit Ups","200m Run","Squats","100m Run","Side-Ups (L+R)","200m Run","Burpees","100m Run","Single Leg Squats (L+R)","200m Run"] },
   dudley: { name: 'Dudley Circuit (30" work / 15" rest)', items: ["Push Ups","Calf Raises","Push Up (Diamond)","Superman",'60" Sprint @ 70%',"Sit Ups","Mountain Climbers","Sit Ups",'60" Sprint @ 70%',"Squat Walk Forward","Burpees","Squat Walk Backward","Pogo Jumps","Forward Lunge",'60" Sprint @ 70%',"Backward Lunge","Frog Jumps","Lateral Squats","V-Sit Ups",'60" Sprint @ 70%'] },
+  mercury: { name: "Mercury", items: ["Ankle Bounces","Side Straddled Hops","Front Straddled Hops","Crossover Hops","Diagonal Hops","Bunny Hops","Zig-Zag Bunny Hops"] },
+  venus: { name: "Venus", items: ["Line Hops","Buttkick Jumps","180s","Rocket Jumps","Speed Skaters","Wideouts","Squat Freeze Jumps"] },
+  mars: { name: "Mars", items: ["Tuck Jumps","Ski Jumps","Single Leg Lateral Turns","Straddle Jumps","Single Leg Medial Turns","Lane Hops","Single Leg Squat Jumps"] },
+  boundingA: { name: "Bounding Series A", items: ["Alternates","Singles (L-R)","Double Singles (L-R)","Double Doubles"] },
 };
 
 const WARMUPS = {
@@ -304,7 +309,10 @@ function circuitsForDay(dayKey, week) {
   if (dayKey === "day2") {
     if (week === 9) return [WARMUPS.circuitA];
     if (week === 10) return [WARMUPS.circuitB];
-    const map = { 1:["gc1"],2:["gc2"],3:["gc3"],4:["gc4"],5:["gc1","gc2"],6:["gc3","gc4"],7:["gc2","gc3"],8:["gc4","gc1"] };
+    const map = {
+      1:["gc1","mercury"], 2:["gc2","venus"], 3:["gc3","mars"], 4:["gc4","boundingA"],
+      5:["gc1","gc2","mercury"], 6:["gc3","gc4","venus"], 7:["gc2","gc3","mars"], 8:["gc4","gc1","boundingA"],
+    };
     return (map[week] || []).map((k) => CIRCUITS[k]);
   }
   if (dayKey === "day4") {
@@ -319,13 +327,6 @@ function circuitsForDay(dayKey, week) {
   }
   return [];
 }
-
-const TIMER_PRESETS = [
-  { label: 'Plyo 20"/40"', work: 20, rest: 40, rounds: 6 },
-  { label: 'Plyo 30"/30"', work: 30, rest: 30, rounds: 6 },
-  { label: 'Vacation 30"/30"', work: 30, rest: 30, rounds: 10 },
-  { label: 'Dudley 30"/15"', work: 30, rest: 15, rounds: 10 },
-];
 
 /* ---------------------------------------------------------------
    PERSISTENCE
@@ -351,7 +352,8 @@ function loadStateForDay() {
 function persist() { saveProgress(storageKey(), { checked: state.checked, warmupChoice: state.warmupChoice }); }
 
 /* ---------------------------------------------------------------
-   TIMER
+   TIMER — cycles through the circuit's real exercise names, one
+   work/rest interval per exercise, instead of a generic round count.
 ----------------------------------------------------------------*/
 let timer = null;
 function beep(freq, dur) {
@@ -370,31 +372,44 @@ function beep(freq, dur) {
     osc.stop(ctx.currentTime + dur + 0.02);
   } catch (e) {}
 }
+// preset: { label, items: [exercise names, no arrow-lines], work, rest }
 function openTimer(preset, accent) {
-  timer = { work: preset.work, rest: preset.rest, rounds: preset.rounds, round: 1, phase: "work", secondsLeft: preset.work, running: false, intervalId: null, label: preset.label, accent };
+  timer = {
+    label: preset.label,
+    items: preset.items,
+    work: preset.work,
+    rest: preset.rest,
+    index: 0,
+    phase: "work",
+    secondsLeft: preset.work,
+    running: false,
+    intervalId: null,
+    accent,
+  };
   render();
 }
 function closeTimer() { if (timer && timer.intervalId) clearInterval(timer.intervalId); timer = null; render(); }
 function stopTimer() { if (!timer) return; timer.running = false; if (timer.intervalId) clearInterval(timer.intervalId); timer.intervalId = null; }
 function timerTick() {
   if (!timer) return;
+  const isLast = timer.index >= timer.items.length - 1;
   timer.secondsLeft -= 1;
   if (timer.secondsLeft <= 0) {
     if (timer.phase === "work") {
       beep(660);
       if (timer.rest > 0) { timer.phase = "rest"; timer.secondsLeft = timer.rest; }
-      else if (timer.round >= timer.rounds) { timer.phase = "done"; stopTimer(); beep(440, 0.3); }
-      else { timer.round += 1; timer.secondsLeft = timer.work; }
+      else if (isLast) { timer.phase = "done"; stopTimer(); beep(440, 0.3); }
+      else { timer.index += 1; timer.phase = "work"; timer.secondsLeft = timer.work; }
     } else if (timer.phase === "rest") {
-      if (timer.round >= timer.rounds) { timer.phase = "done"; stopTimer(); beep(440, 0.3); }
-      else { beep(990); timer.round += 1; timer.phase = "work"; timer.secondsLeft = timer.work; }
+      if (isLast) { timer.phase = "done"; stopTimer(); beep(440, 0.3); }
+      else { beep(990); timer.index += 1; timer.phase = "work"; timer.secondsLeft = timer.work; }
     }
   }
   renderTimerModal();
 }
 function startTimer() { if (!timer || timer.phase === "done") return; timer.running = true; timer.intervalId = setInterval(timerTick, 1000); renderTimerModal(); }
 function toggleTimer() { if (!timer) return; timer.running ? stopTimer() : startTimer(); renderTimerModal(); }
-function resetTimer() { if (!timer) return; stopTimer(); timer.round = 1; timer.phase = "work"; timer.secondsLeft = timer.work; renderTimerModal(); }
+function resetTimer() { if (!timer) return; stopTimer(); timer.index = 0; timer.phase = "work"; timer.secondsLeft = timer.work; renderTimerModal(); }
 
 /* ---------------------------------------------------------------
    UI BUILDERS — every one returns a real DOM node via h()
@@ -530,17 +545,27 @@ function DayMain() {
     ));
   }
 
-  if (state.activeTab === "day2" && state.week <= 8) {
-    const presets = TIMER_PRESETS.filter((p) => (state.week <= 4 ? p.label.includes("20") : (p.label.includes("30") && p.label.includes("Plyo"))));
-    const card = timerCard("Plyo Timer", presets);
+  const PLYO_WEEK_MAP = { 1: "mercury", 2: "venus", 3: "mars", 4: "boundingA", 5: "mercury", 6: "venus", 7: "mars", 8: "boundingA" };
+  if (state.activeTab === "day2" && PLYO_WEEK_MAP[state.week]) {
+    const circuitKey = PLYO_WEEK_MAP[state.week];
+    const circuit = CIRCUITS[circuitKey];
+    const work = state.week <= 4 ? 20 : 30;
+    const rest = state.week <= 4 ? 40 : 30;
+    const preset = { label: `${circuit.name} — ${work}"/${rest}"`, items: circuit.items, work, rest };
+    const card = timerCard("Plyo Timer", [preset]);
     card.querySelector(".card-body").insertBefore(
-      h("p", { class: "timer-hint" }, state.week <= 4 ? 'This week uses 20"/40" intervals.' : 'This week uses 30"/30" intervals.'),
+      h("p", { class: "timer-hint" }, `Cycles through ${circuit.items.length} ${circuit.name} exercises, naming each one as it goes.`),
       card.querySelector(".preset-grid"),
     );
     frag.appendChild(card);
   }
-  if (groups.some((g) => g.name.includes("Vacation")) || groups.some((g) => g.name.includes("Dudley"))) {
-    const presets = TIMER_PRESETS.filter((p) => p.label.includes("Vacation") || p.label.includes("Dudley"));
+
+  const vacationGroup = groups.find((g) => g.name.includes("Vacation"));
+  const dudleyGroup = groups.find((g) => g.name.includes("Dudley"));
+  if (vacationGroup || dudleyGroup) {
+    const presets = [];
+    if (vacationGroup) presets.push({ label: 'Vacation — 30"/30"', items: vacationGroup.items, work: 30, rest: 30 });
+    if (dudleyGroup) presets.push({ label: 'Dudley — 30"/15"', items: dudleyGroup.items, work: 30, rest: 15 });
     frag.appendChild(timerCard("Circuit Timer", presets));
   }
 
@@ -615,11 +640,20 @@ function TimerModal() {
   }, Icon(timer.running ? "pause" : "play", 22, "#fff"));
   if (timer.phase === "done") playBtn.disabled = true;
 
+  const exerciseName = timer.items[timer.index];
+  const nextExerciseName = timer.index + 1 < timer.items.length ? timer.items[timer.index + 1] : null;
+  let mainLine;
+  if (timer.phase === "done") mainLine = "Workout complete";
+  else if (timer.phase === "rest") mainLine = nextExerciseName ? `Up next: ${nextExerciseName}` : "Rest";
+  else mainLine = exerciseName;
+  const countLine = `${Math.min(timer.index + 1, timer.items.length)} / ${timer.items.length}`;
+
   return h("div", { class: "modal-overlay" },
     h("div", { class: "modal-box" },
       h("div", { class: "modal-top" }, h("p", {}, timer.label), h("button", { onclick: closeTimer }, "Close")),
       ringWrap,
-      h("p", { class: "round-label" }, `Round ${Math.min(timer.round, timer.rounds)} / ${timer.rounds}`),
+      h("p", { class: "exercise-name" }, mainLine),
+      h("p", { class: "round-label" }, countLine),
       h("div", { class: "modal-controls" },
         h("button", { class: "round-btn", onclick: resetTimer }, Icon("rotate-ccw", 18, "#14110F")),
         playBtn,
@@ -640,6 +674,14 @@ function render() {
   main.appendChild(state.activeTab === "recovery" ? RecoveryMain() : DayMain());
   root.appendChild(main);
   root.appendChild(TabBar());
+  root.appendChild(h("div", { id: "timerModalRoot" }));
+  renderTimerModal();
+}
+
+function renderTimerModal() {
+  const root = document.getElementById("timerModalRoot");
+  if (!root) return;
+  root.innerHTML = "";
   const modal = TimerModal();
   if (modal) root.appendChild(modal);
 }
