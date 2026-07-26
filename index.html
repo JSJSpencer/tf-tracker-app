@@ -26,11 +26,18 @@
   a { color: inherit; }
   #app { min-height: 100vh; padding-bottom: 96px; }
 
-  .top { background: #14110F; color: #F5F1E8; padding: 24px 20px 16px; }
+  .top { background: #14110F; color: #F5F1E8; padding: calc(24px + env(safe-area-inset-top, 0px)) calc(20px + env(safe-area-inset-right, 0px)) 16px calc(20px + env(safe-area-inset-left, 0px)); }
   .top-row { display: flex; align-items: center; justify-content: space-between; }
   .eyebrow { font-size: 10px; text-transform: uppercase; letter-spacing: 3px; font-weight: 700; margin: 0; }
   .title { font-size: 23px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; line-height: 1.2; margin: 3px 0 0; }
   .subtitle { font-size: 12px; color: rgba(245,241,232,0.45); margin: 3px 0 0; }
+  .phase-select {
+    margin-top: 4px; font-size: 12px; font-weight: 600; color: rgba(245,241,232,0.75);
+    background: rgba(245,241,232,0.08); border: 1px solid rgba(245,241,232,0.2); border-radius: 6px;
+    padding: 3px 6px; max-width: 200px;
+  }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .history-btn { background: none; border: 1px solid rgba(245,241,232,0.2); border-radius: 8px; padding: 8px; cursor: pointer; display: flex; }
   .week-badge { display: flex; flex-direction: column; align-items: center; border: 1px solid rgba(245,241,232,0.2); border-radius: 8px; padding: 6px 12px; min-width: 52px; }
   .week-badge span:first-child { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: rgba(245,241,232,0.45); }
   .week-badge span:last-child { font-size: 20px; font-weight: 700; }
@@ -81,6 +88,35 @@
   .complete-banner { display: flex; align-items: center; gap: 10px; border-radius: 12px; padding: 12px 16px; }
   .complete-banner p { font-size: 14px; font-weight: 700; color: #fff; margin: 0; }
 
+  .day-done-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    border-radius: 12px; padding: 13px 16px; font-size: 14px; font-weight: 700; cursor: pointer; width: 100%;
+  }
+  .day-done-btn.off { background: #fff; border: 2px solid rgba(20,17,15,0.15); color: rgba(20,17,15,0.55); }
+  .day-done-btn.on { border: none; color: #fff; }
+
+  .empty-phase { text-align: center; padding: 8px 4px; }
+  .empty-phase p { font-size: 14px; color: rgba(20,17,15,0.55); margin: 6px 0 0; line-height: 1.5; }
+
+  .toggle-row { display: flex; align-items: center; justify-content: space-between; }
+  .switch { position: relative; display: inline-block; width: 40px; height: 24px; flex: none; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .switch-track { position: absolute; inset: 0; border-radius: 999px; background: rgba(20,17,15,0.15); transition: background 0.15s; cursor: pointer; }
+  .switch-track::before { content: ""; position: absolute; height: 18px; width: 18px; left: 3px; top: 3px; border-radius: 50%; background: #fff; transition: transform 0.15s; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+  .switch input:checked + .switch-track::before { transform: translateX(16px); }
+
+  .history-overlay { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.7); padding: 16px; }
+  .history-box { width: 100%; max-width: 400px; max-height: 85vh; overflow-y: auto; border-radius: 16px; background: #F5F1E8; padding: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.4); border: 2px solid #14110F; }
+  .history-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+  .history-top h3 { font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0; }
+  .history-top button { background: none; border: none; color: rgba(20,17,15,0.6); font-size: 14px; cursor: pointer; }
+  .history-sub { font-size: 12px; color: rgba(20,17,15,0.5); margin: 0 0 14px; }
+  .history-grid { display: grid; grid-template-columns: 32px repeat(5, 1fr); gap: 4px; align-items: center; }
+  .history-col-label { font-size: 10px; font-weight: 700; text-align: center; color: rgba(20,17,15,0.5); text-transform: uppercase; }
+  .history-week-label { font-size: 11px; font-weight: 700; color: rgba(20,17,15,0.5); text-align: right; padding-right: 4px; }
+  .history-cell { height: 26px; border-radius: 6px; border: none; cursor: pointer; background: rgba(20,17,15,0.08); display: flex; align-items: center; justify-content: center; }
+  .history-cell.done { background: var(--cell-accent, #C1440E); }
+
   .timer-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
   .timer-hint { font-size: 12px; color: rgba(20,17,15,0.55); margin-bottom: 12px; }
   .preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -89,7 +125,7 @@
   .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
   .chip { border-radius: 999px; padding: 4px 12px; font-size: 12px; color: rgba(20,17,15,0.7); }
 
-  nav.tabbar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.95); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border-top: 1px solid rgba(20,17,15,0.1); display: flex; padding-bottom: env(safe-area-inset-bottom, 0px); }
+  nav.tabbar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.95); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border-top: 1px solid rgba(20,17,15,0.1); display: flex; padding-bottom: env(safe-area-inset-bottom, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
   .tab-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 0; background: none; border: none; cursor: pointer; }
   .tab-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
   .tab-dash { height: 3px; width: 16px; border-radius: 999px; margin-top: 2px; }
@@ -163,6 +199,7 @@ function iconSvg(name, size, color, strokeWidth) {
     leaf: `<svg ${a}><path d="M11 20A7 7 0 0 1 4 13c0-5 8-11 15-11 0 8-4 18-8 18z"/><path d="M4 13c4 0 8-2 11-9"/></svg>`,
     droplet: `<svg ${a}><path d="M12 2s6 7.5 6 12a6 6 0 0 1-12 0c0-4.5 6-12 6-12z"/></svg>`,
     party: `<svg ${a}><path d="M5 3l3 3M9 2l1 4M2 9l4 1"/><path d="M4 20l10-4L6 6z"/><circle cx="18" cy="6" r="1" fill="${color}"/><circle cx="20" cy="12" r="1" fill="${color}"/></svg>`,
+    calendar: `<svg ${a}><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`,
   };
   return table[name] || "";
 }
@@ -174,7 +211,7 @@ function Icon(name, size, color, strokeWidth) {
 }
 
 /* ---------------------------------------------------------------
-   DATA — Northeastern Summer Training Package, annotated for triple jump
+   DATA — Summer Training Package, annotated for triple jump
 ----------------------------------------------------------------*/
 const WEEKS = Array.from({ length: 11 }, (_, i) => i + 1);
 const ACCENT = { day1: "#C1440E", day2: "#3E6E92", day3: "#6B4A2C", day4: "#B8862E", recovery: "#2F6F5E" };
@@ -302,10 +339,34 @@ const RECOVERY = {
   tj: "Don't skip the ice baths (2x/week recommended) — triple jump landings add up fast over a week of hills + bounding. This is where you protect next week's training, not lose fitness.",
 };
 
-const TAB_DATA = { day1: DAY1, day2: DAY2, day3: DAY3, day4: DAY4, recovery: RECOVERY };
+/* ---------------------------------------------------------------
+   PHASES — Summer Training is fully populated; the rest are
+   placeholders ready to receive real content later.
+----------------------------------------------------------------*/
+const PHASES = {
+  summer: { label: "Summer Training", weeksCount: 11, days: { day1: DAY1, day2: DAY2, day3: DAY3, day4: DAY4 }, recovery: RECOVERY },
+  phase1: { label: "Phase 1", weeksCount: 8, days: {}, recovery: null },
+  phase2: { label: "Phase 2", weeksCount: 8, days: {}, recovery: null },
+  competition: { label: "Competition", weeksCount: 6, days: {}, recovery: null },
+};
+const PHASE_ORDER = ["summer", "phase1", "phase2", "competition"];
+
 const TABS = ["day1", "day2", "day3", "day4", "recovery"];
+const TAB_FALLBACK_LABEL = { day1: "Day 1", day2: "Day 2", day3: "Day 3", day4: "Day 4", recovery: "Recovery" };
+
+function currentPhase() { return PHASES[state.phase]; }
+function getDayObj(tabKey) {
+  const phase = currentPhase();
+  if (tabKey === "recovery") return phase.recovery;
+  return phase.days[tabKey] || null;
+}
+function tabLabel(tabKey) {
+  const obj = getDayObj(tabKey);
+  return obj ? obj.label : TAB_FALLBACK_LABEL[tabKey];
+}
 
 function circuitsForDay(dayKey, week) {
+  if (state.phase !== "summer") return [];
   if (dayKey === "day2") {
     if (week === 9) return [WARMUPS.circuitA];
     if (week === 10) return [WARMUPS.circuitB];
@@ -342,14 +403,53 @@ function saveProgress(key, value) {
 /* ---------------------------------------------------------------
    STATE
 ----------------------------------------------------------------*/
-const state = { week: 1, activeTab: "day1", warmupChoice: "circuitA", checked: {} };
-function storageKey() { return `progress:w${state.week}:${state.activeTab}`; }
+const state = { phase: "summer", week: 1, activeTab: "day1", warmupChoice: "circuitA", checked: {}, historyOpen: false };
+function storageKey() { return `progress:${state.phase}:w${state.week}:${state.activeTab}`; }
 function loadStateForDay() {
   const val = loadProgress(storageKey());
   state.checked = (val && val.checked) || {};
   if (val && val.warmupChoice) state.warmupChoice = val.warmupChoice;
 }
 function persist() { saveProgress(storageKey(), { checked: state.checked, warmupChoice: state.warmupChoice }); }
+
+/* ---------------------------------------------------------------
+   DAY-COMPLETE TRACKING — manual "mark day complete", independent
+   of individual checklist items, plus a small history calendar.
+----------------------------------------------------------------*/
+function dayDoneKey(phase, week, tab) { return `daydone:${phase}:w${week}:${tab}`; }
+function isDayDone(phase, week, tab) {
+  try { return localStorage.getItem(dayDoneKey(phase, week, tab)) === "1"; } catch (e) { return false; }
+}
+function setDayDone(phase, week, tab, val) {
+  try {
+    if (val) localStorage.setItem(dayDoneKey(phase, week, tab), "1");
+    else localStorage.removeItem(dayDoneKey(phase, week, tab));
+  } catch (e) {}
+}
+function toggleDayDone() {
+  setDayDone(state.phase, state.week, state.activeTab, !isDayDone(state.phase, state.week, state.activeTab));
+  render();
+}
+
+/* ---------------------------------------------------------------
+   REP CHECKLIST — optional, parses "N x thing" prescriptions into
+   checkable reps, same idea as the warm-up checklist.
+----------------------------------------------------------------*/
+function parseReps(text) {
+  if (!text) return null;
+  const m = text.match(/^(\d+)\s*x\s*(.+)$/i);
+  if (!m) return null;
+  const count = parseInt(m[1], 10);
+  if (!count || count < 1 || count > 30) return null;
+  return { count, desc: m[2].trim() };
+}
+function repChecklistPrefKey(tabKey) { return `prefs:repChecklist:${tabKey}`; }
+function isRepChecklistOn(tabKey) {
+  try { return localStorage.getItem(repChecklistPrefKey(tabKey)) === "1"; } catch (e) { return false; }
+}
+function setRepChecklistOn(tabKey, val) {
+  try { localStorage.setItem(repChecklistPrefKey(tabKey), val ? "1" : "0"); } catch (e) {}
+}
 
 /* ---------------------------------------------------------------
    TIMER — cycles through the circuit's real exercise names, one
@@ -435,8 +535,11 @@ function Checklist(items, checkedMap, accent, onToggle) {
 
 function Header() {
   const accent = ACCENT[state.activeTab];
+  const weeksCount = currentPhase().weeksCount;
+  const weeksArr = Array.from({ length: weeksCount }, (_, i) => i + 1);
+
   const laneCells = h("div", { class: "lane-cells" });
-  WEEKS.forEach((w) => {
+  weeksArr.forEach((w) => {
     const bg = w === state.week ? accent : (w < state.week ? "#3A362F" : "#F5F1E8");
     const op = w === state.week ? "1" : (w < state.week ? "1" : "0.14");
     const cell = h("button", {
@@ -447,45 +550,86 @@ function Header() {
     laneCells.appendChild(cell);
   });
   const ticks = h("div", { class: "ticks" });
-  WEEKS.forEach((w) => {
+  weeksArr.forEach((w) => {
     ticks.appendChild(h("div", { class: "tick-cell" }, h("div", { class: "tick", style: { height: (w % 5 === 0 ? "6px" : "3px") } })));
+  });
+
+  const phaseSelect = h("select", { class: "phase-select" });
+  PHASE_ORDER.forEach((key) => {
+    const opt = h("option", { value: key }, PHASES[key].label);
+    if (key === state.phase) opt.selected = true;
+    phaseSelect.appendChild(opt);
+  });
+  phaseSelect.addEventListener("change", (e) => {
+    state.phase = e.target.value;
+    const maxWeek = currentPhase().weeksCount;
+    if (state.week > maxWeek) state.week = maxWeek;
+    loadStateForDay();
+    render();
   });
 
   return h("header", { class: "top" },
     h("div", { class: "top-row" },
       h("div", {},
-        h("p", { class: "eyebrow", style: { color: accent } }, "Northeastern Track & Field"),
+        h("p", { class: "eyebrow", style: { color: accent } }, "Track & Field"),
         h("h1", { class: "title" }, "Summer Training"),
-        h("p", { class: "subtitle" }, "Triple Jump build"),
+        phaseSelect,
       ),
-      h("div", { class: "week-badge" }, h("span", {}, "Wk"), h("span", { class: "tabular" }, String(state.week))),
+      h("div", { class: "header-right" },
+        h("button", { class: "history-btn", onclick: () => { state.historyOpen = true; render(); } }, Icon("calendar", 18, "rgba(245,241,232,0.7)")),
+        h("div", { class: "week-badge" }, h("span", {}, "Wk"), h("span", { class: "tabular" }, String(state.week))),
+      ),
     ),
     h("div", { class: "lane-row" },
       h("button", { class: "nav-arrow", onclick: () => { state.week = Math.max(1, state.week - 1); loadStateForDay(); render(); } }, Icon("chevron-left", 18, "rgba(245,241,232,0.5)")),
       h("div", { class: "lane-track" }, laneCells, ticks),
-      h("button", { class: "nav-arrow", onclick: () => { state.week = Math.min(11, state.week + 1); loadStateForDay(); render(); } }, Icon("chevron-right", 18, "rgba(245,241,232,0.5)")),
+      h("button", { class: "nav-arrow", onclick: () => { state.week = Math.min(weeksCount, state.week + 1); loadStateForDay(); render(); } }, Icon("chevron-right", 18, "rgba(245,241,232,0.5)")),
     ),
   );
 }
 
+function DayDoneButton(accent) {
+  const done = isDayDone(state.phase, state.week, state.activeTab);
+  return h("button", {
+    class: "day-done-btn " + (done ? "on" : "off"),
+    style: done ? { backgroundColor: accent } : {},
+    onclick: toggleDayDone,
+  }, Icon(done ? "check" : "calendar", 16, done ? "#fff" : "rgba(20,17,15,0.55)"), done ? "Day Complete — tap to undo" : "Mark Day Complete");
+}
+
 function DayMain() {
   const accent = ACCENT[state.activeTab];
-  const dayObj = TAB_DATA[state.activeTab];
+  const dayObj = getDayObj(state.activeTab);
   const frag = document.createDocumentFragment();
+
+  if (!dayObj) {
+    frag.appendChild(h("div", { class: "card" },
+      h("div", { class: "card-accent-bar", style: { backgroundColor: accent } }),
+      h("div", { class: "card-body empty-phase" },
+        h("h2", {}, `${TAB_FALLBACK_LABEL[state.activeTab]} — ${currentPhase().label}`),
+        h("p", {}, `No program added yet for ${currentPhase().label}. Send the workout details and it'll be wired in here, same as Summer Training.`),
+      ),
+    ));
+    frag.appendChild(DayDoneButton(accent));
+    return frag;
+  }
+
   const groups = circuitsForDay(state.activeTab, state.week);
   const totalBoxes = groups.reduce((sum, g) => sum + g.items.filter((it) => !it.startsWith("→")).length, 0);
   const doneBoxes = Object.values(state.checked).filter(Boolean).length;
-  const dayComplete = totalBoxes > 0 && doneBoxes >= totalBoxes;
+  const allChecked = totalBoxes > 0 && doneBoxes >= totalBoxes;
 
   const dayCardBody = h("div", { class: "card-body" },
     h("h2", {}, dayObj.full),
     h("p", { class: "desc" }, dayObj.base),
     h("div", { class: "week-pill", style: { backgroundColor: accent + "12", border: "1px solid " + accent + "35" } }, `Week ${state.week}: ${dayObj.weeks[state.week]}`),
   );
-  if (state.activeTab === "day4") {
-    dayCardBody.appendChild(h("a", { class: "video-link", style: { color: accent }, href: DAY4.lungeMatrixUrl, target: "_blank", rel: "noreferrer" }, "Lunge Matrix video ↗"));
+  if (dayObj.lungeMatrixUrl) {
+    dayCardBody.appendChild(h("a", { class: "video-link", style: { color: accent }, href: dayObj.lungeMatrixUrl, target: "_blank", rel: "noreferrer" }, "Lunge Matrix video ↗"));
   }
   frag.appendChild(h("div", { class: "card" }, h("div", { class: "card-accent-bar", style: { backgroundColor: accent } }), dayCardBody));
+
+  frag.appendChild(DayDoneButton(accent));
 
   frag.appendChild(h("div", { class: "tj-note" }, h("p", { class: "label" }, "Triple Jump Note"), h("p", {}, dayObj.tj)));
 
@@ -509,14 +653,47 @@ function DayMain() {
       h("div", { class: "warmup-header" }, h("h3", { style: { margin: "0" } }, "Warm Up"), select),
       list,
     )));
+
+    // optional rep checklist — same idea as the warm-up checklist, but for the
+    // workout prescription itself (e.g. "10 x 100m" -> 10 checkable reps)
+    const repsOn = isRepChecklistOn(state.activeTab);
+    const parsed = parseReps(dayObj.weeks[state.week]);
+    const toggleId = `repToggle-${state.activeTab}`;
+    const switchInput = h("input", { type: "checkbox", id: toggleId });
+    switchInput.checked = repsOn;
+    switchInput.addEventListener("change", (e) => { setRepChecklistOn(state.activeTab, e.target.checked); render(); });
+
+    const repsCardBody = h("div", { class: "card-body" },
+      h("div", { class: "toggle-row" },
+        h("h3", { style: { margin: "0" } }, "Rep Checklist"),
+        h("label", { class: "switch" }, switchInput, h("span", { class: "switch-track" })),
+      ),
+    );
+    if (repsOn) {
+      if (parsed) {
+        const repsChecked = Object.fromEntries(Object.entries(state.checked).filter(([k]) => k.startsWith("reps-")).map(([k, v]) => [k.replace("reps-", ""), v]));
+        const items = Array.from({ length: parsed.count }, (_, i) => `Rep ${i + 1} — ${parsed.desc}`);
+        const repsList = Checklist(items, repsChecked, accent, (i) => {
+          const key = `reps-${i}`;
+          state.checked[key] = !state.checked[key];
+          persist();
+          render();
+        });
+        repsCardBody.appendChild(h("p", { class: "timer-hint", style: { marginBottom: "4px" } }, `${parsed.count} reps — tap each one off as you go.`));
+        repsCardBody.appendChild(repsList);
+      } else {
+        repsCardBody.appendChild(h("p", { class: "timer-hint" }, "Can't auto-split this week's prescription into reps — check it off as one block on the day-complete button above."));
+      }
+    }
+    frag.appendChild(h("div", { class: "card" }, repsCardBody));
   }
 
-  if (totalBoxes > 0 && !dayComplete) {
+  if (totalBoxes > 0 && !allChecked) {
     const fill = h("div", { class: "progress-fill", style: { width: `${Math.min(100, (doneBoxes / totalBoxes) * 100)}%`, backgroundColor: accent } });
     frag.appendChild(h("div", { class: "progress-row" }, h("div", { class: "progress-track" }, fill), h("span", { class: "progress-count tabular" }, `${doneBoxes}/${totalBoxes}`)));
   }
-  if (dayComplete) {
-    frag.appendChild(h("div", { class: "complete-banner", style: { backgroundColor: accent } }, Icon("party", 18, "#fff"), h("p", {}, "Session logged. Nice work.")));
+  if (allChecked) {
+    frag.appendChild(h("div", { class: "complete-banner", style: { backgroundColor: accent } }, Icon("party", 18, "#fff"), h("p", {}, "Checklist complete — don't forget to mark the day done above.")));
   }
 
   groups.forEach((g, gi) => {
@@ -574,14 +751,29 @@ function DayMain() {
 
 function RecoveryMain() {
   const accent = ACCENT.recovery;
+  const recovery = getDayObj("recovery");
   const frag = document.createDocumentFragment();
+
+  if (!recovery) {
+    frag.appendChild(h("div", { class: "card" },
+      h("div", { class: "card-accent-bar", style: { backgroundColor: accent } }),
+      h("div", { class: "card-body empty-phase" },
+        h("h2", {}, `Recovery — ${currentPhase().label}`),
+        h("p", {}, `No recovery guidance added yet for ${currentPhase().label}.`),
+      ),
+    ));
+    frag.appendChild(DayDoneButton(accent));
+    return frag;
+  }
+
   frag.appendChild(h("div", { class: "card" },
     h("div", { class: "card-accent-bar", style: { backgroundColor: accent } }),
-    h("div", { class: "card-body" }, h("h2", {}, RECOVERY.full), h("p", { class: "desc" }, RECOVERY.text)),
+    h("div", { class: "card-body" }, h("h2", {}, recovery.full), h("p", { class: "desc" }, recovery.text)),
   ));
-  frag.appendChild(h("div", { class: "tj-note recovery" }, Icon("droplet", 18, "#2F6F5E"), h("p", {}, RECOVERY.tj)));
+  frag.appendChild(DayDoneButton(accent));
+  frag.appendChild(h("div", { class: "tj-note recovery" }, Icon("droplet", 18, "#2F6F5E"), h("p", {}, recovery.tj)));
   const chipRow = h("div", { class: "chip-row" });
-  RECOVERY.options.forEach((o) => chipRow.appendChild(h("span", { class: "chip", style: { backgroundColor: accent + "12" } }, o)));
+  recovery.options.forEach((o) => chipRow.appendChild(h("span", { class: "chip", style: { backgroundColor: accent + "12" } }, o)));
   frag.appendChild(h("div", { class: "card" }, h("div", { class: "card-body" }, h("h3", {}, "Pick something"), chipRow)));
   return frag;
 }
@@ -594,7 +786,7 @@ function TabBar() {
     const color = isActive ? tabAccent : "rgba(20,17,15,0.35)";
     const btn = h("button", { class: "tab-btn", onclick: () => { state.activeTab = key; loadStateForDay(); render(); } },
       Icon(TAB_ICON[key], 19, color, isActive ? 2.4 : 1.8),
-      h("span", { class: "tab-label", style: { color } }, TAB_DATA[key].label),
+      h("span", { class: "tab-label", style: { color } }, tabLabel(key)),
     );
     if (isActive) btn.appendChild(h("span", { class: "tab-dash", style: { backgroundColor: tabAccent } }));
     nav.appendChild(btn);
@@ -663,6 +855,41 @@ function TimerModal() {
   );
 }
 
+function HistoryModal() {
+  if (!state.historyOpen) return null;
+  const phase = currentPhase();
+  const weeksArr = Array.from({ length: phase.weeksCount }, (_, i) => i + 1);
+
+  const grid = h("div", { class: "history-grid" });
+  grid.appendChild(h("div", {}));
+  TABS.forEach((key) => {
+    grid.appendChild(h("div", { class: "history-col-label" }, tabLabel(key).slice(0, 2)));
+  });
+  weeksArr.forEach((w) => {
+    grid.appendChild(h("div", { class: "history-week-label" }, `W${w}`));
+    TABS.forEach((key) => {
+      const done = isDayDone(state.phase, w, key);
+      const cell = h("button", {
+        class: "history-cell" + (done ? " done" : ""),
+        style: done ? { "--cell-accent": ACCENT[key] } : {},
+        onclick: () => {
+          setDayDone(state.phase, w, key, !done);
+          renderHistoryModal();
+        },
+      }, done ? Icon("check", 12, "#fff", 3) : null);
+      grid.appendChild(cell);
+    });
+  });
+
+  return h("div", { class: "history-overlay" },
+    h("div", { class: "history-box" },
+      h("div", { class: "history-top" }, h("h3", {}, "Training Log"), h("button", { onclick: () => { state.historyOpen = false; render(); } }, "Close")),
+      h("p", { class: "history-sub" }, `${phase.label} — tap a cell to mark or unmark that day`),
+      grid,
+    ),
+  );
+}
+
 /* ---------------------------------------------------------------
    RENDER
 ----------------------------------------------------------------*/
@@ -675,7 +902,9 @@ function render() {
   root.appendChild(main);
   root.appendChild(TabBar());
   root.appendChild(h("div", { id: "timerModalRoot" }));
+  root.appendChild(h("div", { id: "historyModalRoot" }));
   renderTimerModal();
+  renderHistoryModal();
 }
 
 function renderTimerModal() {
@@ -683,6 +912,14 @@ function renderTimerModal() {
   if (!root) return;
   root.innerHTML = "";
   const modal = TimerModal();
+  if (modal) root.appendChild(modal);
+}
+
+function renderHistoryModal() {
+  const root = document.getElementById("historyModalRoot");
+  if (!root) return;
+  root.innerHTML = "";
+  const modal = HistoryModal();
   if (modal) root.appendChild(modal);
 }
 

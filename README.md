@@ -2,6 +2,12 @@
 
 A complete, installable app version of your training tracker. Rebuilt from scratch with **zero external dependencies** — no CDN scripts, no fonts fetched at runtime, nothing that can fail to load. Tested end-to-end in a real browser before shipping (every day, every week 1-11, every checklist, the warm-up picker, and the interval timer).
 
+## What's new in this version
+- **Phases**: tap the phase name under the title to switch between Summer Training, Phase 1, Phase 2, and Competition. Only Summer Training has content so far — the others are ready-made placeholders. Send their workout details whenever you have them and they'll get wired in the same way.
+- **Mark Day Complete**: a button on every day, independent of the exercise checkboxes — for logging that you did the session even if you didn't check off every single item.
+- **Training Log**: tap the calendar icon in the header to see a grid of every week/day in the current phase, with a checkmark for anything marked complete. Tap any cell to toggle it.
+- **Rep Checklist**: on Speed and Hills days, flip the switch to turn the week's prescription (e.g. "10 x 100m") into individual checkable reps, same idea as the warm-up checklist.
+
 ## Files
 - `index.html` — the whole app (HTML + CSS + JS, self-contained)
 - `manifest.json` — makes it installable
