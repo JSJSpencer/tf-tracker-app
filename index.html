@@ -5,64 +5,186 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
 <title>T&F Summer Training</title>
 
-<!-- PWA / installability -->
 <link rel="manifest" href="manifest.json" />
 <meta name="theme-color" content="#14110F" />
 <link rel="icon" href="icons/icon-192.png" />
 
-<!-- iOS "Add to Home Screen" support -->
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="T&F" />
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; padding: 0; background: #F5F1E8; overscroll-behavior-y: none; }
-  body { font-family: 'Inter', sans-serif; }
-  #root { min-height: 100vh; }
-  .tabular-nums { font-variant-numeric: tabular-nums; }
-  ::selection { background: #C1440E33; }
-</style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #14110F;
+  }
+  .display {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 700;
+  }
+  .tabular { font-variant-numeric: tabular-nums; }
+  button { font-family: inherit; }
+  a { color: inherit; }
 
-<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
+  #app { min-height: 100vh; padding-bottom: 96px; }
+
+  header.top {
+    background: #14110F;
+    color: #F5F1E8;
+    padding: 24px 20px 16px;
+  }
+  .top-row { display: flex; align-items: center; justify-content: space-between; }
+  .eyebrow { font-size: 10px; text-transform: uppercase; letter-spacing: 3px; font-weight: 700; margin: 0; }
+  .title { font-size: 23px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; line-height: 1.2; margin: 3px 0 0; }
+  .subtitle { font-size: 12px; color: rgba(245,241,232,0.45); margin: 3px 0 0; }
+  .week-badge {
+    display: flex; flex-direction: column; align-items: center;
+    border: 1px solid rgba(245,241,232,0.2); border-radius: 8px;
+    padding: 6px 12px; min-width: 52px;
+  }
+  .week-badge span:first-child { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: rgba(245,241,232,0.45); }
+  .week-badge span:last-child { font-size: 20px; font-weight: 700; }
+
+  .lane-row { display: flex; align-items: center; gap: 4px; margin-top: 20px; }
+  .lane-row button.nav-arrow { background: none; border: none; color: rgba(245,241,232,0.5); padding: 4px; cursor: pointer; }
+  .lane-track { flex: 1; }
+  .lane-cells { display: flex; gap: 3px; }
+  .lane-cell {
+    position: relative; flex: 1; height: 28px; border-radius: 3px; overflow: hidden;
+    border: none; cursor: pointer;
+  }
+  .lane-cell .num {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: #fff;
+  }
+  .ticks { display: flex; gap: 3px; margin-top: 3px; }
+  .tick-cell { flex: 1; display: flex; justify-content: center; }
+  .tick { width: 1px; background: rgba(245,241,232,0.25); }
+
+  main { padding: 20px 20px 20px; display: flex; flex-direction: column; gap: 16px; }
+
+  .card { border-radius: 12px; background: #fff; border: 1px solid rgba(20,17,15,0.1); overflow: hidden; }
+  .card-accent-bar { height: 4px; }
+  .card-body { padding: 16px; }
+  .card h2 { font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0; }
+  .card h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 6px; }
+  .card p.desc { margin-top: 4px; font-size: 14px; color: rgba(20,17,15,0.65); }
+  .week-pill { margin-top: 12px; border-radius: 8px; padding: 10px 12px; font-size: 14px; font-weight: 600; }
+  .video-link { margin-top: 8px; display: inline-block; font-size: 12px; text-decoration: underline; }
+
+  .tj-note { border-radius: 12px; padding: 16px; border: 1px solid rgba(47,111,94,0.3); background: rgba(47,111,94,0.06); }
+  .tj-note .label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; color: #2F6F5E; margin: 0; }
+  .tj-note p { margin-top: 4px; font-size: 14px; color: rgba(20,17,15,0.8); line-height: 1.4; }
+  .tj-note.recovery { display: flex; gap: 10px; }
+  .tj-note.recovery svg { flex: none; margin-top: 2px; }
+
+  .warmup-header { display: flex; align-items: center; justify-content: space-between; }
+  select.warmup-select {
+    border-radius: 6px; border: 1px solid rgba(20,17,15,0.2); background: #F5F1E8;
+    padding: 4px 8px; font-size: 12px;
+  }
+
+  ul.checklist { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+  li.arrow-line { padding: 6px 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #8A6A52; font-weight: 700; }
+  button.item-btn {
+    display: flex; width: 100%; align-items: flex-start; gap: 10px; border-radius: 8px;
+    padding: 6px 8px; text-align: left; background: none; border: none; cursor: pointer;
+  }
+  button.item-btn:active { background: rgba(20,17,15,0.06); }
+  .check-circle {
+    margin-top: 2px; display: flex; height: 18px; width: 18px; flex: none;
+    align-items: center; justify-content: center; border-radius: 999px; border: 2px solid rgba(20,17,15,0.25);
+  }
+  .item-label { font-size: 14px; line-height: 1.4; padding-top: 1px; color: #14110F; }
+  .item-label.done { color: rgba(20,17,15,0.35); text-decoration: line-through; }
+
+  .progress-row { display: flex; align-items: center; gap: 8px; }
+  .progress-track { height: 6px; flex: 1; border-radius: 999px; background: rgba(20,17,15,0.1); overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 999px; transition: width 0.2s; }
+  .progress-count { font-size: 12px; color: rgba(20,17,15,0.45); }
+
+  .complete-banner { display: flex; align-items: center; gap: 10px; border-radius: 12px; padding: 12px 16px; }
+  .complete-banner p { font-size: 14px; font-weight: 700; color: #fff; margin: 0; }
+
+  .timer-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .timer-hint { font-size: 12px; color: rgba(20,17,15,0.55); margin-bottom: 12px; }
+  .preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .preset-btn {
+    border-radius: 8px; padding: 8px 12px; font-size: 12px; font-weight: 700;
+    background: none; cursor: pointer;
+  }
+
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { border-radius: 999px; padding: 4px 12px; font-size: 12px; color: rgba(20,17,15,0.7); }
+
+  nav.tabbar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(255,255,255,0.95); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    border-top: 1px solid rgba(20,17,15,0.1); display: flex;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .tab-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+    padding: 10px 0; background: none; border: none; cursor: pointer;
+  }
+  .tab-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .tab-dash { height: 3px; width: 16px; border-radius: 999px; margin-top: 2px; }
+
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.7); padding: 16px;
+  }
+  .modal-box { width: 100%; max-width: 384px; border-radius: 16px; background: #F5F1E8; padding: 24px; box-shadow: 0 25px 50px rgba(0,0,0,0.4); border: 2px solid #14110F; }
+  .modal-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .modal-top p { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: #8A8478; margin: 0; }
+  .modal-top button { background: none; border: none; color: rgba(20,17,15,0.6); font-size: 14px; cursor: pointer; }
+  .ring-wrap { position: relative; margin: 0 auto 20px; height: 192px; width: 192px; }
+  .ring-wrap svg { height: 100%; width: 100%; transform: rotate(-90deg); }
+  .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .ring-time { font-size: 48px; font-weight: 700; color: #14110F; }
+  .ring-phase { margin-top: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; }
+  .round-label { text-align: center; font-size: 14px; color: rgba(20,17,15,0.7); margin-bottom: 16px; }
+  .modal-controls { display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .round-btn { border-radius: 999px; border: 2px solid #14110F; padding: 12px; background: none; cursor: pointer; }
+  .play-btn { border-radius: 999px; padding: 16px; color: #fff; border: none; box-shadow: 0 10px 20px rgba(0,0,0,0.2); cursor: pointer; }
+  .play-btn[disabled] { opacity: 0.4; }
+</style>
 </head>
 <body>
-<div id="root"></div>
+<div id="app"></div>
 
-<script type="text/babel" data-presets="react" data-type="module">
-const { useState, useEffect, useRef, useCallback } = React;
-
-/* ---------- minimal inline icon set (no external icon library needed) ---------- */
-function Icon({ name, size = 18, color = "currentColor", strokeWidth = 2 }) {
-  const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: color, strokeWidth, strokeLinecap: "round", strokeLinejoin: "round" };
+<script>
+/* ---------------------------------------------------------------
+   ICONS — tiny inline SVGs, no external icon library required
+----------------------------------------------------------------*/
+function icon(name, { size = 18, color = "currentColor", strokeWidth = 2 } = {}) {
+  const a = `width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round"`;
   switch (name) {
-    case "check": return <svg {...common}><polyline points="20 6 9 17 4 12" /></svg>;
-    case "timer": return <svg {...common}><circle cx="12" cy="13" r="8" /><path d="M12 9v4l3 2" /><path d="M9 2h6" /></svg>;
-    case "play": return <svg {...common} fill={color} stroke="none"><polygon points="6 3 20 12 6 21 6 3" /></svg>;
-    case "pause": return <svg {...common} fill={color} stroke="none"><rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" /></svg>;
-    case "rotate-ccw": return <svg {...common}><path d="M1 4v6h6" /><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" /></svg>;
-    case "chevron-left": return <svg {...common}><polyline points="15 18 9 12 15 6" /></svg>;
-    case "chevron-right": return <svg {...common}><polyline points="9 18 15 12 9 6" /></svg>;
-    case "zap": return <svg {...common} fill={color} stroke="none"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>;
-    case "refresh-cw": return <svg {...common}><path d="M23 4v6h-6" /><path d="M1 20v-6h6" /><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10" /><path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14" /></svg>;
-    case "mountain": return <svg {...common}><path d="M3 20l7-11 4 6 3-4 4 9H3z" /></svg>;
-    case "move": return <svg {...common}><path d="M4 12h16" /><path d="M4 12l4-4M4 12l4 4" /><path d="M20 12l-4-4M20 12l-4 4" /><path d="M12 4v16" /></svg>;
-    case "leaf": return <svg {...common}><path d="M11 20A7 7 0 0 1 4 13c0-5 8-11 15-11 0 8-4 18-8 18z" /><path d="M4 13c4 0 8-2 11-9" /></svg>;
-    case "droplet": return <svg {...common}><path d="M12 2s6 7.5 6 12a6 6 0 0 1-12 0c0-4.5 6-12 6-12z" /></svg>;
-    case "party": return <svg {...common}><path d="M5 3l3 3M9 2l1 4M2 9l4 1" /><path d="M4 20l10-4L6 6z" /><circle cx="18" cy="6" r="1" fill={color} /><circle cx="20" cy="12" r="1" fill={color} /></svg>;
-    default: return null;
+    case "check": return `<svg ${a}><polyline points="20 6 9 17 4 12"/></svg>`;
+    case "timer": return `<svg ${a}><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2"/><path d="M9 2h6"/></svg>`;
+    case "play": return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${color}" stroke="none"><polygon points="6 3 20 12 6 21 6 3"/></svg>`;
+    case "pause": return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${color}" stroke="none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
+    case "rotate-ccw": return `<svg ${a}><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>`;
+    case "chevron-left": return `<svg ${a}><polyline points="15 18 9 12 15 6"/></svg>`;
+    case "chevron-right": return `<svg ${a}><polyline points="9 18 15 12 9 6"/></svg>`;
+    case "zap": return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${color}" stroke="none"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
+    case "refresh-cw": return `<svg ${a}><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/></svg>`;
+    case "mountain": return `<svg ${a}><path d="M3 20l7-11 4 6 3-4 4 9H3z"/></svg>`;
+    case "move": return `<svg ${a}><path d="M4 12h16"/><path d="M4 12l4-4M4 12l4 4"/><path d="M20 12l-4-4M20 12l-4 4"/><path d="M12 4v16"/></svg>`;
+    case "leaf": return `<svg ${a}><path d="M11 20A7 7 0 0 1 4 13c0-5 8-11 15-11 0 8-4 18-8 18z"/><path d="M4 13c4 0 8-2 11-9"/></svg>`;
+    case "droplet": return `<svg ${a}><path d="M12 2s6 7.5 6 12a6 6 0 0 1-12 0c0-4.5 6-12 6-12z"/></svg>`;
+    case "party": return `<svg ${a}><path d="M5 3l3 3M9 2l1 4M2 9l4 1"/><path d="M4 20l10-4L6 6z"/><circle cx="18" cy="6" r="1" fill="${color}"/><circle cx="20" cy="12" r="1" fill="${color}"/></svg>`;
+    default: return "";
   }
 }
 
 /* ---------------------------------------------------------------
-   DATA — Northeastern Summer Training Package, annotated for triple jump.
+   DATA — Northeastern Summer Training Package, annotated for triple jump
 ----------------------------------------------------------------*/
 const WEEKS = Array.from({ length: 11 }, (_, i) => i + 1);
-
 const ACCENT = { day1: "#C1440E", day2: "#3E6E92", day3: "#6B4A2C", day4: "#B8862E", recovery: "#2F6F5E" };
 const TAB_ICON = { day1: "zap", day2: "refresh-cw", day3: "mountain", day4: "move", recovery: "leaf" };
 
@@ -184,13 +306,9 @@ const RECOVERY = {
   tj: "Don't skip the ice baths (2x/week recommended) — triple jump landings add up fast over a week of hills + bounding. This is where you protect next week's training, not lose fitness.",
 };
 
-const DAYS = [
-  { key: "day1", data: DAY1 },
-  { key: "day2", data: DAY2 },
-  { key: "day3", data: DAY3 },
-  { key: "day4", data: DAY4 },
-];
-const TABS = [...DAYS, { key: "recovery", data: RECOVERY }];
+const DAYS = { day1: DAY1, day2: DAY2, day3: DAY3, day4: DAY4 };
+const TABS = ["day1", "day2", "day3", "day4", "recovery"];
+const TAB_DATA = { day1: DAY1, day2: DAY2, day3: DAY3, day4: DAY4, recovery: RECOVERY };
 
 function circuitsForDay(dayKey, week) {
   if (dayKey === "day2") {
@@ -212,23 +330,51 @@ function circuitsForDay(dayKey, week) {
   return [];
 }
 
+const TIMER_PRESETS = [
+  { label: "Plyo 20\"/40\"", work: 20, rest: 40, rounds: 6 },
+  { label: "Plyo 30\"/30\"", work: 30, rest: 30, rounds: 6 },
+  { label: "Vacation 30\"/30\"", work: 30, rest: 30, rounds: 10 },
+  { label: "Dudley 30\"/15\"", work: 30, rest: 15, rounds: 10 },
+];
+
 /* ---------------------------------------------------------------
-   local persistence — plain localStorage (this is a real deployed
-   app, not a claude.ai artifact, so browser storage is fine here)
+   PERSISTENCE
 ----------------------------------------------------------------*/
 function loadProgress(key) {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : null;
-  } catch (e) { return null; }
+  try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : null; }
+  catch (e) { return null; }
 }
 function saveProgress(key, value) {
-  try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* ignore */ }
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
+}
+
+/* ---------------------------------------------------------------
+   STATE
+----------------------------------------------------------------*/
+const state = {
+  week: 1,
+  activeTab: "day1",
+  warmupChoice: "circuitA",
+  checked: {},
+};
+
+function storageKey() { return `progress:w${state.week}:${state.activeTab}`; }
+
+function loadStateForDay() {
+  const val = loadProgress(storageKey());
+  state.checked = (val && val.checked) || {};
+  if (val && val.warmupChoice) state.warmupChoice = val.warmupChoice;
+}
+
+function persist() {
+  saveProgress(storageKey(), { checked: state.checked, warmupChoice: state.warmupChoice });
 }
 
 /* ---------------------------------------------------------------
    TIMER
 ----------------------------------------------------------------*/
+let timer = null; // { work, rest, rounds, round, phase, secondsLeft, running, intervalId, label, accent }
+
 function beep(freq = 880, dur = 0.12) {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -242,432 +388,298 @@ function beep(freq = 880, dur = 0.12) {
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
     osc.start();
     osc.stop(ctx.currentTime + dur + 0.02);
-  } catch (e) { /* ignore */ }
+  } catch (e) {}
 }
 
-function IntervalTimer({ presetLabel, work, rest, rounds, accent, onClose }) {
-  const [round, setRound] = useState(1);
-  const [phase, setPhase] = useState("work");
-  const [secondsLeft, setSecondsLeft] = useState(work);
-  const [running, setRunning] = useState(false);
-  const intervalRef = useRef(null);
+function openTimer(preset, accent) {
+  timer = { work: preset.work, rest: preset.rest, rounds: preset.rounds, round: 1, phase: "work", secondsLeft: preset.work, running: false, intervalId: null, label: preset.label, accent };
+  render();
+}
+function closeTimer() {
+  if (timer && timer.intervalId) clearInterval(timer.intervalId);
+  timer = null;
+  render();
+}
+function timerTick() {
+  if (!timer) return;
+  timer.secondsLeft -= 1;
+  if (timer.secondsLeft <= 0) {
+    if (timer.phase === "work") {
+      beep(660);
+      if (timer.rest > 0) { timer.phase = "rest"; timer.secondsLeft = timer.rest; }
+      else if (timer.round >= timer.rounds) { timer.phase = "done"; stopTimer(); beep(440, 0.3); }
+      else { timer.round += 1; timer.secondsLeft = timer.work; }
+    } else if (timer.phase === "rest") {
+      if (timer.round >= timer.rounds) { timer.phase = "done"; stopTimer(); beep(440, 0.3); }
+      else { beep(990); timer.round += 1; timer.phase = "work"; timer.secondsLeft = timer.work; }
+    }
+  }
+  renderTimerModal();
+}
+function startTimer() {
+  if (!timer || timer.phase === "done") return;
+  timer.running = true;
+  timer.intervalId = setInterval(timerTick, 1000);
+  renderTimerModal();
+}
+function stopTimer() {
+  if (!timer) return;
+  timer.running = false;
+  if (timer.intervalId) clearInterval(timer.intervalId);
+  timer.intervalId = null;
+}
+function toggleTimer() { if (!timer) return; timer.running ? stopTimer() : startTimer(); renderTimerModal(); }
+function resetTimer() {
+  if (!timer) return;
+  stopTimer();
+  timer.round = 1; timer.phase = "work"; timer.secondsLeft = timer.work;
+  renderTimerModal();
+}
 
-  useEffect(() => {
-    if (!running) return;
-    intervalRef.current = setInterval(() => {
-      setSecondsLeft((s) => {
-        if (s <= 1) {
-          if (phase === "work") {
-            beep(660);
-            if (rest > 0) { setPhase("rest"); return rest; }
-            if (round >= rounds) { setPhase("done"); setRunning(false); beep(440,0.3); return 0; }
-            setRound((r) => r + 1); return work;
-          } else if (phase === "rest") {
-            if (round >= rounds) { setPhase("done"); setRunning(false); beep(440,0.3); return 0; }
-            beep(990);
-            setRound((r) => r + 1);
-            setPhase("work");
-            return work;
-          }
-          return 0;
-        }
-        return s - 1;
-      });
-    }, 1000);
-    return () => clearInterval(intervalRef.current);
-  }, [running, phase, round, work, rest, rounds]);
+/* ---------------------------------------------------------------
+   RENDER
+----------------------------------------------------------------*/
+function checklistHtml(items, checkedMap, accent, groupAttr) {
+  return `<ul class="checklist">${items.map((item, i) => {
+    if (item.startsWith("→")) {
+      return `<li class="arrow-line">${item}</li>`;
+    }
+    const done = !!checkedMap[i];
+    return `<li>
+      <button class="item-btn" data-action="toggle" ${groupAttr} data-index="${i}">
+        <span class="check-circle" style="border-color:${done ? accent : "rgba(20,17,15,0.25)"};background-color:${done ? accent : "transparent"}">
+          ${done ? icon("check", { size: 11, color: "#fff", strokeWidth: 3.5 }) : ""}
+        </span>
+        <span class="item-label ${done ? "done" : ""}">${item}</span>
+      </button>
+    </li>`;
+  }).join("")}</ul>`;
+}
 
-  const reset = () => { setRunning(false); setRound(1); setPhase("work"); setSecondsLeft(work); };
-  const pct = phase === "work" ? (secondsLeft / work) : phase === "rest" ? (secondsLeft / rest) : 0;
-  const phaseColor = phase === "work" ? accent : phase === "rest" ? "#2F6F5E" : "#8A8478";
+function render() {
+  const accent = ACCENT[state.activeTab];
+  const isRecovery = state.activeTab === "recovery";
+  const dayObj = TAB_DATA[state.activeTab];
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4" style={{position:"fixed",top:0,left:0,right:0,bottom:0,zIndex:50,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(0,0,0,0.7)",padding:16}}>
-      <div style={{width:"100%",maxWidth:384,borderRadius:16,background:"#F5F1E8",padding:24,boxShadow:"0 25px 50px rgba(0,0,0,0.4)",border:"2px solid #14110F"}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
-          <p style={{fontFamily:"'Oswald'",textTransform:"uppercase",letterSpacing:1,fontSize:14,color:"#8A8478",margin:0}}>{presetLabel}</p>
-          <button onClick={onClose} style={{background:"none",border:"none",color:"rgba(20,17,15,0.6)",fontSize:14,cursor:"pointer"}}>Close</button>
+  // header
+  const laneCells = WEEKS.map((w) => {
+    const bg = w === state.week ? accent : (w < state.week ? "#3A362F" : "#F5F1E8");
+    const op = w === state.week ? 1 : (w < state.week ? 1 : 0.14);
+    return `<button class="lane-cell" data-action="set-week" data-week="${w}" style="background-color:${bg};opacity:${op}">
+      ${w === state.week ? `<span class="num">${w}</span>` : ""}
+    </button>`;
+  }).join("");
+  const ticks = WEEKS.map((w) => `<div class="tick-cell"><div class="tick" style="height:${w % 5 === 0 ? 6 : 3}px"></div></div>`).join("");
+
+  const headerHtml = `
+    <header class="top">
+      <div class="top-row">
+        <div>
+          <p class="eyebrow" style="color:${accent}">Northeastern Track &amp; Field</p>
+          <h1 class="title">Summer Training</h1>
+          <p class="subtitle">Triple Jump build</p>
         </div>
-
-        <div style={{position:"relative",margin:"0 auto 20px",height:192,width:192}}>
-          <svg viewBox="0 0 100 100" style={{height:"100%",width:"100%",transform:"rotate(-90deg)"}}>
-            <circle cx="50" cy="50" r="46" fill="none" stroke="#E4DFD2" strokeWidth="6" />
-            <circle
-              cx="50" cy="50" r="46" fill="none" stroke={phaseColor} strokeWidth="6"
-              strokeDasharray={2 * Math.PI * 46}
-              strokeDashoffset={2 * Math.PI * 46 * (1 - (phase === "done" ? 1 : pct))}
-              strokeLinecap="round"
-              style={{ transition: "stroke-dashoffset 1s linear" }}
-            />
-          </svg>
-          <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
-            <span className="tabular-nums" style={{fontFamily:"'Oswald'",fontSize:48,fontWeight:600,color:"#14110F"}}>
-              {phase === "done" ? "GO" : secondsLeft}
-            </span>
-            <span style={{marginTop:4,fontSize:12,textTransform:"uppercase",letterSpacing:2,color:phaseColor}}>
-              {phase === "done" ? "Complete" : phase}
-            </span>
-          </div>
+        <div class="week-badge"><span>Wk</span><span class="tabular">${state.week}</span></div>
+      </div>
+      <div class="lane-row">
+        <button class="nav-arrow" data-action="week-prev">${icon("chevron-left", { size: 18, color: "rgba(245,241,232,0.5)" })}</button>
+        <div class="lane-track">
+          <div class="lane-cells">${laneCells}</div>
+          <div class="ticks">${ticks}</div>
         </div>
+        <button class="nav-arrow" data-action="week-next">${icon("chevron-right", { size: 18, color: "rgba(245,241,232,0.5)" })}</button>
+      </div>
+    </header>`;
 
-        <p style={{textAlign:"center",fontSize:14,color:"rgba(20,17,15,0.7)",marginBottom:16}}>Round {Math.min(round, rounds)} / {rounds}</p>
+  // main
+  let mainHtml = "";
+  if (!isRecovery) {
+    const groups = circuitsForDay(state.activeTab, state.week);
+    const totalBoxes = groups.reduce((sum, g) => sum + g.items.filter((it) => !it.startsWith("→")).length, 0);
+    const doneBoxes = Object.values(state.checked).filter(Boolean).length;
+    const dayComplete = totalBoxes > 0 && doneBoxes >= totalBoxes;
 
-        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:12}}>
-          <button onClick={reset} style={{borderRadius:"999px",border:"2px solid #14110F",padding:12,background:"none",cursor:"pointer"}}>
-            <Icon name="rotate-ccw" size={18} color="#14110F" />
-          </button>
-          <button
-            onClick={() => setRunning((r) => !r)}
-            disabled={phase === "done"}
-            style={{backgroundColor:accent,borderRadius:"999px",padding:16,color:"#fff",border:"none",boxShadow:"0 10px 20px rgba(0,0,0,0.2)",cursor:"pointer",opacity:phase==="done"?0.4:1}}
-          >
-            <Icon name={running ? "pause" : "play"} size={22} color="#fff" />
-          </button>
-          <div style={{width:52}} />
+    mainHtml += `
+      <div class="card">
+        <div class="card-accent-bar" style="background-color:${accent}"></div>
+        <div class="card-body">
+          <h2>${dayObj.full}</h2>
+          <p class="desc">${dayObj.base}</p>
+          <div class="week-pill" style="background-color:${accent}12;border:1px solid ${accent}35">Week ${state.week}: ${dayObj.weeks[state.week]}</div>
+          ${state.activeTab === "day4" ? `<a class="video-link" style="color:${accent}" href="${DAY4.lungeMatrixUrl}" target="_blank" rel="noreferrer">Lunge Matrix video ↗</a>` : ""}
         </div>
       </div>
-    </div>
-  );
-}
+      <div class="tj-note">
+        <p class="label">Triple Jump Note</p>
+        <p>${dayObj.tj}</p>
+      </div>`;
 
-const TIMER_PRESETS = [
-  { label: "Plyo 20\"/40\"", work: 20, rest: 40, rounds: 6 },
-  { label: "Plyo 30\"/30\"", work: 30, rest: 30, rounds: 6 },
-  { label: "Vacation 30\"/30\"", work: 30, rest: 30, rounds: 10 },
-  { label: "Dudley 30\"/15\"", work: 30, rest: 15, rounds: 10 },
-];
-
-/* ---------------------------------------------------------------
-   CHECKLIST
-----------------------------------------------------------------*/
-function Checklist({ items, checkedMap, onToggle, accent }) {
-  return (
-    <ul style={{listStyle:"none",margin:0,padding:0,display:"flex",flexDirection:"column",gap:4}}>
-      {items.map((item, i) => {
-        const isArrow = item.startsWith("→");
-        const done = !!checkedMap[i];
-        if (isArrow) {
-          return (
-            <li key={i} style={{paddingLeft:4,paddingTop:6,paddingBottom:6,fontSize:11,textTransform:"uppercase",letterSpacing:0.5,color:"#8A6A52",fontWeight:600}}>
-              {item}
-            </li>
-          );
-        }
-        return (
-          <li key={i}>
-            <button
-              onClick={() => onToggle(i)}
-              style={{display:"flex",width:"100%",alignItems:"flex-start",gap:10,borderRadius:8,padding:"6px 8px",textAlign:"left",background:"none",border:"none",cursor:"pointer"}}
-            >
-              <span style={{marginTop:2,display:"flex",height:18,width:18,flex:"none",alignItems:"center",justifyContent:"center",borderRadius:"999px",border:`2px solid ${done ? accent : "rgba(20,17,15,0.25)"}`,backgroundColor: done ? accent : "transparent"}}>
-                {done && <Icon name="check" size={11} color="#fff" strokeWidth={3.5} />}
-              </span>
-              <span style={{fontSize:14,lineHeight:1.4,paddingTop:1,color: done ? "rgba(20,17,15,0.35)" : "#14110F", textDecoration: done ? "line-through" : "none"}}>
-                {item}
-              </span>
-            </button>
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
-
-/* ---------------------------------------------------------------
-   MAIN APP
-----------------------------------------------------------------*/
-function App() {
-  const [week, setWeek] = useState(1);
-  const [activeTab, setActiveTab] = useState("day1");
-  const [warmupChoice, setWarmupChoice] = useState("circuitA");
-  const [checked, setChecked] = useState({});
-  const [timerPreset, setTimerPreset] = useState(null);
-
-  const dayObj = DAYS.find((d) => d.key === activeTab)?.data;
-  const isRecovery = activeTab === "recovery";
-  const accent = ACCENT[activeTab];
-  const storageKey = `progress:w${week}:${activeTab}`;
-
-  useEffect(() => {
-    const val = loadProgress(storageKey);
-    if (val) {
-      setChecked(val.checked || {});
-      if (val.warmupChoice) setWarmupChoice(val.warmupChoice);
-    } else {
-      setChecked({});
+    if (state.activeTab === "day1" || state.activeTab === "day3") {
+      const warmupItems = WARMUPS[state.warmupChoice].items;
+      const warmupChecked = Object.fromEntries(Object.entries(state.checked).filter(([k]) => k.startsWith("warmup-")).map(([k, v]) => [k.replace("warmup-", ""), v]));
+      mainHtml += `
+        <div class="card"><div class="card-body">
+          <div class="warmup-header">
+            <h3 style="margin:0">Warm Up</h3>
+            <select class="warmup-select" id="warmupSelect">
+              ${Object.entries(WARMUPS).map(([k, v]) => `<option value="${k}" ${k === state.warmupChoice ? "selected" : ""}>${v.name}</option>`).join("")}
+            </select>
+          </div>
+          ${checklistHtml(warmupItems, warmupChecked, accent, `data-group="warmup"`)}
+        </div></div>`;
     }
-  }, [storageKey]);
 
-  const persist = useCallback((nextChecked, nextWarmup) => {
-    saveProgress(storageKey, { checked: nextChecked, warmupChoice: nextWarmup ?? warmupChoice });
-  }, [storageKey, warmupChoice]);
+    if (totalBoxes > 0 && !dayComplete) {
+      mainHtml += `
+        <div class="progress-row">
+          <div class="progress-track"><div class="progress-fill" style="width:${Math.min(100, (doneBoxes / totalBoxes) * 100)}%;background-color:${accent}"></div></div>
+          <span class="progress-count tabular">${doneBoxes}/${totalBoxes}</span>
+        </div>`;
+    }
+    if (dayComplete) {
+      mainHtml += `<div class="complete-banner" style="background-color:${accent}">${icon("party", { size: 18, color: "#fff" })}<p>Session logged. Nice work.</p></div>`;
+    }
 
-  const toggleItem = (groupIdx, itemIdx) => {
-    setChecked((prev) => {
-      const key = `${groupIdx}-${itemIdx}`;
-      const next = { ...prev, [key]: !prev[key] };
-      persist(next);
-      return next;
+    groups.forEach((g, gi) => {
+      const groupChecked = Object.fromEntries(Object.entries(state.checked).filter(([k]) => k.startsWith(`${gi}-`)).map(([k, v]) => [k.replace(`${gi}-`, ""), v]));
+      mainHtml += `<div class="card"><div class="card-body"><h3>${g.name}</h3>${checklistHtml(g.items, groupChecked, accent, `data-group="${gi}"`)}</div></div>`;
     });
-  };
 
-  const groups = isRecovery ? [] : circuitsForDay(activeTab, week);
-  const totalBoxes = isRecovery ? 0 : groups.reduce((sum, g) => sum + g.items.filter((it) => !it.startsWith("→")).length, 0);
-  const doneBoxes = Object.values(checked).filter(Boolean).length;
-  const dayComplete = totalBoxes > 0 && doneBoxes >= totalBoxes;
+    if (state.activeTab === "day2" && state.week <= 8) {
+      const presets = TIMER_PRESETS.filter((p) => (state.week <= 4 ? p.label.includes("20") : (p.label.includes("30") && p.label.includes("Plyo"))));
+      mainHtml += `
+        <div class="card"><div class="card-body">
+          <div class="timer-header">${icon("timer", { size: 16, color: accent })}<h3 style="margin:0">Plyo Timer</h3></div>
+          <p class="timer-hint">${state.week <= 4 ? "This week uses 20\"/40\" intervals." : "This week uses 30\"/30\" intervals."}</p>
+          <div class="preset-grid">${presets.map((p) => `<button class="preset-btn" style="border:2px solid ${accent};color:${accent}" data-action="open-timer" data-work="${p.work}" data-rest="${p.rest}" data-rounds="${p.rounds}" data-label="${p.label}">${p.label}</button>`).join("")}</div>
+        </div></div>`;
+    }
+    if (groups.some((g) => g.name.includes("Vacation")) || groups.some((g) => g.name.includes("Dudley"))) {
+      const presets = TIMER_PRESETS.filter((p) => p.label.includes("Vacation") || p.label.includes("Dudley"));
+      mainHtml += `
+        <div class="card"><div class="card-body">
+          <div class="timer-header">${icon("timer", { size: 16, color: accent })}<h3 style="margin:0">Circuit Timer</h3></div>
+          <div class="preset-grid">${presets.map((p) => `<button class="preset-btn" style="border:2px solid ${accent};color:${accent}" data-action="open-timer" data-work="${p.work}" data-rest="${p.rest}" data-rounds="${p.rounds}" data-label="${p.label}">${p.label}</button>`).join("")}</div>
+        </div></div>`;
+    }
+  } else {
+    mainHtml += `
+      <div class="card">
+        <div class="card-accent-bar" style="background-color:${accent}"></div>
+        <div class="card-body"><h2>${RECOVERY.full}</h2><p class="desc">${RECOVERY.text}</p></div>
+      </div>
+      <div class="tj-note recovery">${icon("droplet", { size: 18, color: "#2F6F5E" })}<p>${RECOVERY.tj}</p></div>
+      <div class="card"><div class="card-body">
+        <h3>Pick something</h3>
+        <div class="chip-row">${RECOVERY.options.map((o) => `<span class="chip" style="background-color:${accent}12">${o}</span>`).join("")}</div>
+      </div></div>`;
+  }
 
-  return (
-    <div style={{minHeight:"100vh",background:"#F5F1E8",color:"#14110F"}}>
-      {/* HEADER */}
-      <header style={{background:"#14110F",padding:"24px 20px 16px",color:"#F5F1E8"}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-          <div>
-            <p style={{fontSize:10,textTransform:"uppercase",letterSpacing:3,fontWeight:600,color:accent,margin:0}}>Northeastern Track &amp; Field</p>
-            <h1 style={{fontFamily:"'Oswald'",fontSize:24,fontWeight:600,textTransform:"uppercase",letterSpacing:1,lineHeight:1.2,margin:"2px 0 0"}}>Summer Training</h1>
-            <p style={{fontSize:12,color:"rgba(245,241,232,0.45)",margin:"2px 0 0"}}>Triple Jump build</p>
-          </div>
-          <div style={{display:"flex",flexDirection:"column",alignItems:"center",borderRadius:8,border:"1px solid rgba(245,241,232,0.2)",padding:"6px 12px",minWidth:52}}>
-            <span style={{fontSize:9,textTransform:"uppercase",letterSpacing:2,color:"rgba(245,241,232,0.45)"}}>Wk</span>
-            <span className="tabular-nums" style={{fontFamily:"'Oswald'",fontSize:20,fontWeight:600}}>{week}</span>
-          </div>
-        </div>
+  // tab bar
+  const tabbarHtml = `
+    <nav class="tabbar">
+      ${TABS.map((key) => {
+        const isActive = state.activeTab === key;
+        const tabAccent = ACCENT[key];
+        return `<button class="tab-btn" data-action="set-tab" data-tab="${key}">
+          ${icon(TAB_ICON[key], { size: 19, color: isActive ? tabAccent : "rgba(20,17,15,0.35)", strokeWidth: isActive ? 2.4 : 1.8 })}
+          <span class="tab-label" style="color:${isActive ? tabAccent : "rgba(20,17,15,0.35)"}">${TAB_DATA[key].label}</span>
+          ${isActive ? `<span class="tab-dash" style="background-color:${tabAccent}"></span>` : ""}
+        </button>`;
+      }).join("")}
+    </nav>`;
 
-        <div style={{marginTop:20}}>
-          <div style={{display:"flex",alignItems:"center",gap:4}}>
-            <button onClick={() => setWeek((w) => Math.max(1, w - 1))} style={{padding:4,background:"none",border:"none",color:"rgba(245,241,232,0.5)",cursor:"pointer"}} aria-label="Previous week">
-              <Icon name="chevron-left" size={18} color="rgba(245,241,232,0.5)" />
-            </button>
-            <div style={{flex:1}}>
-              <div style={{display:"flex",gap:3}}>
-                {WEEKS.map((w) => (
-                  <button
-                    key={w}
-                    onClick={() => setWeek(w)}
-                    style={{position:"relative",flex:1,height:28,borderRadius:3,overflow:"hidden",border:"none",cursor:"pointer",
-                      backgroundColor: w === week ? accent : w < week ? "#3A362F" : "#F5F1E8",
-                      opacity: w === week ? 1 : w < week ? 1 : 0.14}}
-                    aria-label={`Week ${w}`}
-                  >
-                    {w === week && (
-                      <span style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,color:"#fff",fontFamily:"'Oswald'"}}>
-                        {w}
-                      </span>
-                    )}
-                  </button>
-                ))}
-              </div>
-              <div style={{display:"flex",gap:3,marginTop:3}}>
-                {WEEKS.map((w) => (
-                  <div key={w} style={{flex:1,display:"flex",justifyContent:"center"}}>
-                    <div style={{width:1,background:"rgba(245,241,232,0.25)",height: w % 5 === 0 ? 6 : 3}} />
-                  </div>
-                ))}
-              </div>
-            </div>
-            <button onClick={() => setWeek((w) => Math.min(11, w + 1))} style={{padding:4,background:"none",border:"none",cursor:"pointer"}} aria-label="Next week">
-              <Icon name="chevron-right" size={18} color="rgba(245,241,232,0.5)" />
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* MAIN */}
-      <main style={{padding:"20px 20px 112px",display:"flex",flexDirection:"column",gap:16}}>
-        {!isRecovery && (
-          <React.Fragment>
-            <div style={{borderRadius:12,background:"#fff",overflow:"hidden",border:"1px solid rgba(20,17,15,0.1)"}}>
-              <div style={{height:4,backgroundColor:accent}} />
-              <div style={{padding:16}}>
-                <h2 style={{fontFamily:"'Oswald'",fontSize:18,fontWeight:600,textTransform:"uppercase",letterSpacing:0.5,margin:0}}>{dayObj.full}</h2>
-                <p style={{marginTop:4,fontSize:14,color:"rgba(20,17,15,0.65)"}}>{dayObj.base}</p>
-                <div style={{marginTop:12,borderRadius:8,padding:"10px 12px",backgroundColor:`${accent}12`,border:`1px solid ${accent}35`}}>
-                  <p style={{fontSize:14,fontWeight:600,margin:0}}>Week {week}: {dayObj.weeks[week]}</p>
-                </div>
-                {activeTab === "day4" && (
-                  <a href={DAY4.lungeMatrixUrl} target="_blank" rel="noreferrer" style={{marginTop:8,display:"inline-block",fontSize:12,color:accent}}>
-                    Lunge Matrix video ↗
-                  </a>
-                )}
-              </div>
-            </div>
-
-            <div style={{borderRadius:12,padding:16,border:"1px solid rgba(47,111,94,0.3)",backgroundColor:"rgba(47,111,94,0.06)"}}>
-              <p style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,fontWeight:700,color:"#2F6F5E",margin:0}}>Triple Jump Note</p>
-              <p style={{marginTop:4,fontSize:14,color:"rgba(20,17,15,0.8)",lineHeight:1.4}}>{dayObj.tj}</p>
-            </div>
-
-            {(activeTab === "day1" || activeTab === "day3") && (
-              <div style={{borderRadius:12,background:"#fff",border:"1px solid rgba(20,17,15,0.1)",padding:16}}>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <h3 style={{fontFamily:"'Oswald'",fontSize:14,fontWeight:600,textTransform:"uppercase",letterSpacing:0.5,margin:0}}>Warm Up</h3>
-                  <select
-                    value={warmupChoice}
-                    onChange={(e) => { setWarmupChoice(e.target.value); persist(checked, e.target.value); }}
-                    style={{borderRadius:6,border:"1px solid rgba(20,17,15,0.2)",background:"#F5F1E8",padding:"4px 8px",fontSize:12}}
-                  >
-                    {Object.entries(WARMUPS).map(([k, v]) => <option key={k} value={k}>{v.name}</option>)}
-                  </select>
-                </div>
-                <div style={{marginTop:8}}>
-                  <Checklist
-                    items={WARMUPS[warmupChoice].items}
-                    checkedMap={Object.fromEntries(Object.entries(checked).filter(([k]) => k.startsWith("warmup-")).map(([k, v]) => [k.replace("warmup-", ""), v]))}
-                    onToggle={(i) => {
-                      setChecked((prev) => {
-                        const key = `warmup-${i}`;
-                        const next = { ...prev, [key]: !prev[key] };
-                        persist(next);
-                        return next;
-                      });
-                    }}
-                    accent={accent}
-                  />
-                </div>
-              </div>
-            )}
-
-            {totalBoxes > 0 && !dayComplete && (
-              <div style={{display:"flex",alignItems:"center",gap:8}}>
-                <div style={{height:6,flex:1,borderRadius:999,background:"rgba(20,17,15,0.1)",overflow:"hidden"}}>
-                  <div style={{height:"100%",borderRadius:999,backgroundColor:accent,width:`${Math.min(100, (doneBoxes / totalBoxes) * 100)}%`,transition:"width 0.2s"}} />
-                </div>
-                <span className="tabular-nums" style={{fontSize:12,color:"rgba(20,17,15,0.45)"}}>{doneBoxes}/{totalBoxes}</span>
-              </div>
-            )}
-
-            {dayComplete && (
-              <div style={{display:"flex",alignItems:"center",gap:10,borderRadius:12,padding:"12px 16px",backgroundColor:accent}}>
-                <Icon name="party" size={18} color="#fff" />
-                <p style={{fontSize:14,fontWeight:600,color:"#fff",margin:0}}>Session logged. Nice work.</p>
-              </div>
-            )}
-
-            {groups.map((g, gi) => (
-              <div key={gi} style={{borderRadius:12,background:"#fff",border:"1px solid rgba(20,17,15,0.1)",padding:16}}>
-                <h3 style={{fontFamily:"'Oswald'",fontSize:14,fontWeight:600,textTransform:"uppercase",letterSpacing:0.5,margin:"0 0 6px"}}>{g.name}</h3>
-                <Checklist
-                  items={g.items}
-                  checkedMap={Object.fromEntries(Object.entries(checked).filter(([k]) => k.startsWith(`${gi}-`)).map(([k, v]) => [k.replace(`${gi}-`, ""), v]))}
-                  onToggle={(i) => toggleItem(gi, i)}
-                  accent={accent}
-                />
-              </div>
-            ))}
-
-            {activeTab === "day2" && week <= 8 && (
-              <div style={{borderRadius:12,background:"#fff",border:"1px solid rgba(20,17,15,0.1)",padding:16}}>
-                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
-                  <Icon name="timer" size={16} color={accent} />
-                  <h3 style={{fontFamily:"'Oswald'",fontSize:14,fontWeight:600,textTransform:"uppercase",letterSpacing:0.5,margin:0}}>Plyo Timer</h3>
-                </div>
-                <p style={{fontSize:12,color:"rgba(20,17,15,0.55)",marginBottom:12}}>
-                  {week <= 4 ? "This week uses 20\"/40\" intervals." : "This week uses 30\"/30\" intervals."}
-                </p>
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-                  {TIMER_PRESETS.filter((p) => (week <= 4 ? p.label.includes("20") : p.label.includes("30") && p.label.includes("Plyo"))).map((p) => (
-                    <button
-                      key={p.label}
-                      onClick={() => setTimerPreset(p)}
-                      style={{borderRadius:8,border:`2px solid ${accent}`,padding:"8px 12px",fontSize:12,fontWeight:600,color:accent,background:"none",cursor:"pointer"}}
-                    >
-                      {p.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-            {(groups.some((g) => g.name.includes("Vacation")) || groups.some((g) => g.name.includes("Dudley"))) && (
-              <div style={{borderRadius:12,background:"#fff",border:"1px solid rgba(20,17,15,0.1)",padding:16}}>
-                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
-                  <Icon name="timer" size={16} color={accent} />
-                  <h3 style={{fontFamily:"'Oswald'",fontSize:14,fontWeight:600,textTransform:"uppercase",letterSpacing:0.5,margin:0}}>Circuit Timer</h3>
-                </div>
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-                  {TIMER_PRESETS.filter((p) => p.label.includes("Vacation") || p.label.includes("Dudley")).map((p) => (
-                    <button
-                      key={p.label}
-                      onClick={() => setTimerPreset(p)}
-                      style={{borderRadius:8,border:`2px solid ${accent}`,padding:"8px 12px",fontSize:12,fontWeight:600,color:accent,background:"none",cursor:"pointer"}}
-                    >
-                      {p.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </React.Fragment>
-        )}
-
-        {isRecovery && (
-          <React.Fragment>
-            <div style={{borderRadius:12,background:"#fff",overflow:"hidden",border:"1px solid rgba(20,17,15,0.1)"}}>
-              <div style={{height:4,backgroundColor:accent}} />
-              <div style={{padding:16}}>
-                <h2 style={{fontFamily:"'Oswald'",fontSize:18,fontWeight:600,textTransform:"uppercase",letterSpacing:0.5,margin:0}}>{RECOVERY.full}</h2>
-                <p style={{marginTop:4,fontSize:14,color:"rgba(20,17,15,0.65)"}}>{RECOVERY.text}</p>
-              </div>
-            </div>
-            <div style={{borderRadius:12,padding:16,display:"flex",gap:10,border:"1px solid rgba(47,111,94,0.3)",backgroundColor:"rgba(47,111,94,0.06)"}}>
-              <Icon name="droplet" size={18} color="#2F6F5E" />
-              <p style={{fontSize:14,color:"rgba(20,17,15,0.8)",lineHeight:1.4,margin:0}}>{RECOVERY.tj}</p>
-            </div>
-            <div style={{borderRadius:12,background:"#fff",border:"1px solid rgba(20,17,15,0.1)",padding:16}}>
-              <h3 style={{fontFamily:"'Oswald'",fontSize:14,fontWeight:600,textTransform:"uppercase",letterSpacing:0.5,margin:"0 0 8px"}}>Pick something</h3>
-              <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
-                {RECOVERY.options.map((o) => (
-                  <span key={o} style={{borderRadius:999,padding:"4px 12px",fontSize:12,backgroundColor:`${accent}12`,color:"rgba(20,17,15,0.7)"}}>{o}</span>
-                ))}
-              </div>
-            </div>
-          </React.Fragment>
-        )}
-      </main>
-
-      {/* BOTTOM TAB BAR */}
-      <nav style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(255,255,255,0.95)",backdropFilter:"blur(8px)",borderTop:"1px solid rgba(20,17,15,0.1)",display:"flex",paddingBottom:"env(safe-area-inset-bottom, 0px)"}}>
-        {TABS.map((t) => {
-          const isActive = activeTab === t.key;
-          const tabAccent = ACCENT[t.key];
-          return (
-            <button
-              key={t.key}
-              onClick={() => setActiveTab(t.key)}
-              style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:2,padding:"10px 0",background:"none",border:"none",cursor:"pointer"}}
-            >
-              <Icon name={TAB_ICON[t.key]} size={19} color={isActive ? tabAccent : "rgba(20,17,15,0.35)"} strokeWidth={isActive ? 2.4 : 1.8} />
-              <span style={{fontSize:10,fontWeight:600,textTransform:"uppercase",letterSpacing:0.5,color: isActive ? tabAccent : "rgba(20,17,15,0.35)"}}>
-                {t.data.label}
-              </span>
-              {isActive && <span style={{height:3,width:16,borderRadius:999,marginTop:2,backgroundColor:tabAccent}} />}
-            </button>
-          );
-        })}
-      </nav>
-
-      {timerPreset && (
-        <IntervalTimer
-          presetLabel={timerPreset.label}
-          work={timerPreset.work}
-          rest={timerPreset.rest}
-          rounds={timerPreset.rounds}
-          accent={accent}
-          onClose={() => setTimerPreset(null)}
-        />
-      )}
-    </div>
-  );
+  document.getElementById("app").innerHTML = headerHtml + `<main>${mainHtml}</main>` + tabbarHtml + `<div id="timerModalRoot"></div>`;
+  renderTimerModal();
 }
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<App />);
-</script>
+function renderTimerModal() {
+  const root = document.getElementById("timerModalRoot");
+  if (!root) return;
+  if (!timer) { root.innerHTML = ""; return; }
 
-<script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js").catch(() => {});
-    });
+  const totalForPct = timer.phase === "work" ? timer.work : timer.rest;
+  const pct = timer.phase === "done" ? 1 : (timer.secondsLeft / totalForPct);
+  const phaseColor = timer.phase === "work" ? timer.accent : (timer.phase === "rest" ? "#2F6F5E" : "#8A8478");
+  const circumference = 2 * Math.PI * 46;
+  const dashoffset = circumference * (1 - (timer.phase === "done" ? 1 : pct));
+
+  root.innerHTML = `
+    <div class="modal-overlay">
+      <div class="modal-box">
+        <div class="modal-top">
+          <p>${timer.label}</p>
+          <button data-action="close-timer">Close</button>
+        </div>
+        <div class="ring-wrap">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="46" fill="none" stroke="#E4DFD2" stroke-width="6"/>
+            <circle cx="50" cy="50" r="46" fill="none" stroke="${phaseColor}" stroke-width="6"
+              stroke-dasharray="${circumference}" stroke-dashoffset="${dashoffset}" stroke-linecap="round"
+              style="transition: stroke-dashoffset 1s linear"/>
+          </svg>
+          <div class="ring-center">
+            <span class="ring-time tabular">${timer.phase === "done" ? "GO" : timer.secondsLeft}</span>
+            <span class="ring-phase" style="color:${phaseColor}">${timer.phase === "done" ? "Complete" : timer.phase}</span>
+          </div>
+        </div>
+        <p class="round-label">Round ${Math.min(timer.round, timer.rounds)} / ${timer.rounds}</p>
+        <div class="modal-controls">
+          <button class="round-btn" data-action="reset-timer">${icon("rotate-ccw", { size: 18, color: "#14110F" })}</button>
+          <button class="play-btn" style="background-color:${timer.accent}" data-action="toggle-timer" ${timer.phase === "done" ? "disabled" : ""}>
+            ${icon(timer.running ? "pause" : "play", { size: 22, color: "#fff" })}
+          </button>
+          <div style="width:52px"></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ---------------------------------------------------------------
+   EVENTS — delegated, so no re-binding needed after re-render
+----------------------------------------------------------------*/
+document.addEventListener("click", (e) => {
+  const el = e.target.closest("[data-action]");
+  if (!el) return;
+  const action = el.dataset.action;
+
+  if (action === "set-week") { state.week = Number(el.dataset.week); loadStateForDay(); render(); }
+  else if (action === "week-prev") { state.week = Math.max(1, state.week - 1); loadStateForDay(); render(); }
+  else if (action === "week-next") { state.week = Math.min(11, state.week + 1); loadStateForDay(); render(); }
+  else if (action === "set-tab") { state.activeTab = el.dataset.tab; loadStateForDay(); render(); }
+  else if (action === "toggle") {
+    const key = `${el.dataset.group}-${el.dataset.index}`;
+    state.checked[key] = !state.checked[key];
+    persist();
+    render();
   }
+  else if (action === "open-timer") {
+    openTimer({ work: Number(el.dataset.work), rest: Number(el.dataset.rest), rounds: Number(el.dataset.rounds), label: el.dataset.label }, ACCENT[state.activeTab]);
+  }
+  else if (action === "close-timer") { closeTimer(); }
+  else if (action === "toggle-timer") { toggleTimer(); }
+  else if (action === "reset-timer") { resetTimer(); }
+});
+
+document.addEventListener("change", (e) => {
+  if (e.target.id === "warmupSelect") {
+    state.warmupChoice = e.target.value;
+    persist();
+    render();
+  }
+});
+
+/* ---------------------------------------------------------------
+   INIT
+----------------------------------------------------------------*/
+loadStateForDay();
+render();
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
 </script>
 </body>
 </html>

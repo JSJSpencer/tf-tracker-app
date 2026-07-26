@@ -31,4 +31,11 @@ It'll now sit on your home screen with its own icon, open full-screen with no br
 
 ## Notes
 - Progress is saved locally on your phone (`localStorage`), per week/day — nothing is sent anywhere.
-- If you update the files later, bump `CACHE_NAME` in `sw.js` (e.g. `tf-tracker-v2`) so your phone picks up the new version instead of serving the cached one.
+- This version has **zero external dependencies** — no CDN scripts, no fonts fetched at runtime. Everything needed is in this folder, so it can't fail from a slow or blocked network request.
+- If you update the files later, bump `CACHE_NAME` in `sw.js` (e.g. `tf-tracker-v3`) so your phone picks up the new version instead of serving the cached one.
+
+## If you already installed the broken version
+The old version loaded fonts/scripts from the internet and could show a gray blank screen if that failed. To fix an already-installed copy:
+1. Remove the app from your home screen (long-press → Remove App)
+2. Re-deploy these updated files to your host (Netlify/GitHub Pages)
+3. Open the URL fresh in Safari, then Add to Home Screen again
