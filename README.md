@@ -39,11 +39,14 @@ If it's not obvious, ask me. It's usually one of:
     "Exercise 2",
     "→ 3x 50m Build-ups with Skip Return",
     "Exercise 3"
-  ]
+  ],
+  "timer": { "work": 30, "rest": 15 }
 }
 ```
 - `key` must match the filename (without `.json`), lowercase, no spaces — e.g. `key: "gc5"` → filename `gc5.json`.
 - Circuits go in the `circuits/` folder, warmups go in the `warmups/` folder.
+- **`timer` is optional** — only include it if the source describes a work/rest interval scheme for this circuit (e.g. "30 seconds on, 15 seconds rest between each exercise", or "20"-40" seconds ON / 20"-40" seconds Rest per exercise" — if it's a range, pick a single reasonable value like the lower end). When present, the app shows a live countdown timer that cycles through the exercise list, naming each one as it goes. Omit `timer` entirely for straight rep/set-based circuits (like "10 Push Ups, 10 Squats...") that have no interval structure — those just render as a plain checklist, which is correct for them.
+- If the source describes *different* timing for different weeks of the same circuit (e.g. "20"/40" in weeks 1-4, then 30"/30" in weeks 5-8"), flag that to me explicitly rather than picking one — that's a week-dependent scheduling detail that needs a small code change, not something you can encode in the circuit file alone.
 
 ### Phase file
 ```json
@@ -104,6 +107,7 @@ Same idea as phases:
    ```
    - `key` must be unique and match how you'll reference it in code.
    - `items` is the checklist. Any item starting with `→` renders as a section divider instead of a checkbox (used for the "3x 50m Build-ups..." style lines in the warm-ups).
+   - Optionally add `"timer": { "work": 30, "rest": 15 }` if the circuit has a work/rest interval structure (like Vacation and Dudley do). The app then shows a countdown timer that cycles through the exercise list automatically — no code changes needed. Leave it out for plain rep/set circuits.
 3. Add the filename to `circuits/manifest.json` (or `warmups/manifest.json`).
 4. Redeploy the folder.
 

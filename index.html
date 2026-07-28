@@ -250,7 +250,7 @@ async function loadLibrary(folder, targetObj) {
       if (!r.ok) throw new Error(r.status);
       const data = await r.json();
       if (!data.key) continue;
-      targetObj[data.key] = { name: data.name, items: data.items };
+      targetObj[data.key] = { name: data.name, items: data.items, timer: data.timer || null };
     } catch (e) {
       console.error("Failed to load " + folder + " file:", file, e);
     }
@@ -674,12 +674,17 @@ function DayMain() {
     frag.appendChild(card);
   }
 
-  const vacationGroup = groups.find((g) => g.name.includes("Vacation"));
-  const dudleyGroup = groups.find((g) => g.name.includes("Dudley"));
-  if (vacationGroup || dudleyGroup) {
-    const presets = [];
-    if (vacationGroup) presets.push({ label: 'Vacation — 30"/30"', items: vacationGroup.items, work: 30, rest: 30 });
-    if (dudleyGroup) presets.push({ label: 'Dudley — 30"/15"', items: dudleyGroup.items, work: 30, rest: 15 });
+  // Any circuit/warmup group whose JSON includes a "timer" field gets a
+  // timer button automatically — this is data-driven, not name-matched,
+  // so a brand-new timed circuit works without touching this code.
+  const timedGroups = groups.filter((g) => g.timer && g.timer.work);
+  if (timedGroups.length > 0) {
+    const presets = timedGroups.map((g) => ({
+      label: `${g.name} — ${g.timer.work}"/${g.timer.rest || 0}"`,
+      items: g.items,
+      work: g.timer.work,
+      rest: g.timer.rest || 0,
+    }));
     frag.appendChild(timerCard("Circuit Timer", presets));
   }
 
@@ -851,7 +856,7 @@ function catalogSection(title, entries, query) {
       },
     },
       h("span", { class: "name" }, v.name),
-      h("span", { class: "count" }, `${v.items.length} →`),
+      h("span", { class: "count" }, v.timer ? `${v.timer.work}"/${v.timer.rest || 0}" · ${v.items.length}` : `${v.items.length} →`),
     );
     const body = isOpen ? h("div", { class: "catalog-item-body" },
       h("ul", {}, ...v.items.map((item) =>
