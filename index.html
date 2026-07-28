@@ -217,139 +217,61 @@ const WEEKS = Array.from({ length: 11 }, (_, i) => i + 1);
 const ACCENT = { day1: "#C1440E", day2: "#3E6E92", day3: "#6B4A2C", day4: "#B8862E", recovery: "#2F6F5E" };
 const TAB_ICON = { day1: "zap", day2: "refresh-cw", day3: "mountain", day4: "move", recovery: "leaf" };
 
-const CIRCUITS = {
-  gc1: { name: "General Circuit 1", items: ["Push Ups","Prisoner Squats","V-Sits","Back Hypers","Toe Touch","Rocket Jumps","Dips","L-Overs (L+R)","Single Leg Squats (R)","Single Leg Squats (L)","Russian Twist (feet off ground)","Bunny Hops","Prone Opposite Arm/Leg Lifts","Crunches"] },
-  gc2: { name: "General Circuit 2", items: ["Incline Push Ups","Single Leg Squats","Crunches","Decline Push Ups","Side Crunch (L)","Side Crunch (R)","Single Leg Toe Raises (R)","Single Leg Toe Raises (L)","Rocket Jumps","Back Hypers w/ Twist","Glute Bridge","Crunches","Mountain Climbers","Line Hops"] },
-  gc3: { name: "General Circuit 3", items: ["Toe Touches","Lunge Jumps","Back Hyper","Tuck Jumps","Bicycle Crunches","Squat Jumps","Push Ups","Sky Divers","Rocket Jumps","Side Crunches (L)","Side Crunch (R)","Single Leg Donkey Kicks (L)","Single Leg Donkey Kicks (R)","L-Overs","Line Hops","Alternating V-Sits"] },
-  gc4: { name: "General Circuit 4", items: ["Squats","Incline Push Ups","Pogo Jumps","Hip Thrust","Lunges Forward","Jumping Jacks","Push Ups","V-Sit Ups","Lunges Lateral","Burpees","Sit Ups","Mountain Climbers","Decline Push Ups","Bicycle Crunches","Star Jump","Russian Twist"] },
-  running: { name: "Running Circuit", items: ["Stride 200m","25 Crunches","25 Push Ups","Stride 100m","25 Back Hypers","10 L-Overs each side","Stride 100m","Lunges (10 out, 10 back)","25 Side Crunches","25 Side Crunches (opp. side)","Stride 200m","— rest 3', repeat 2x more —"] },
-  vacation: { name: 'Vacation Circuit (30" on / 30" rest)', items: ["V-Sit Ups","100m Run","Push Ups","200m Run","Mountain Climbers","100m Run","Lateral Squats (L+R)","200m Run","Hip Extenders/Thrust","100m Run","Sit Ups","200m Run","Squats","100m Run","Side-Ups (L+R)","200m Run","Burpees","100m Run","Single Leg Squats (L+R)","200m Run"] },
-  dudley: { name: 'Dudley Circuit (30" work / 15" rest)', items: ["Push Ups","Calf Raises","Push Up (Diamond)","Superman",'60" Sprint @ 70%',"Sit Ups","Mountain Climbers","Sit Ups",'60" Sprint @ 70%',"Squat Walk Forward","Burpees","Squat Walk Backward","Pogo Jumps","Forward Lunge",'60" Sprint @ 70%',"Backward Lunge","Frog Jumps","Lateral Squats","V-Sit Ups",'60" Sprint @ 70%'] },
-  mercury: { name: "Mercury", items: ["Ankle Bounces","Side Straddled Hops","Front Straddled Hops","Crossover Hops","Diagonal Hops","Bunny Hops","Zig-Zag Bunny Hops"] },
-  venus: { name: "Venus", items: ["Line Hops","Buttkick Jumps","180s","Rocket Jumps","Speed Skaters","Wideouts","Squat Freeze Jumps"] },
-  mars: { name: "Mars", items: ["Tuck Jumps","Ski Jumps","Single Leg Lateral Turns","Straddle Jumps","Single Leg Medial Turns","Lane Hops","Single Leg Squat Jumps"] },
-  boundingA: { name: "Bounding Series A", items: ["Alternates","Singles (L-R)","Double Singles (L-R)","Double Doubles"] },
-};
+/* ---------------------------------------------------------------
+   CIRCUITS & WARMUPS — loaded at runtime from circuits/*.json and
+   warmups/*.json, same pattern as phases. To add a new circuit or
+   warm-up: drop a new file (shape: {"key","name","items"}) into
+   the folder and add its filename to that folder's manifest.json.
+   index.html never needs to change.
+----------------------------------------------------------------*/
+let CIRCUITS = {};
+let WARMUPS = {};
 
-const WARMUPS = {
-  circuitA: { name: "Circuit Warm Up", items: [
-    "Barefoot Prep: tiptoes fwd/bkwd, in, out, arches, sides, heel walk, toe-grab shuffle",
-    "Joint Mobility: ankle/knee/hip circles, trunk rotations, 4-way neck stretch, wrist circles",
-    "10 Prisoner Squats", "10 Front Lunges", "20 Wide Outs", "20 Crunches",
-    "→ 3x 50m Build-ups w/ Skip Return",
-    "10 Side Lunges", "10 Alt. Side Lunges", "10 Kneeling Trail Leg Circles (fwd & bkw)", "10 Fire Hydrants",
-    "→ 3x Marching Run w/ Low Skip + Scoop Return",
-    "20 Scissor Splits", "10 Donkey Kicks", "10 Lead & Trail Leg Lifts", "20 Lateral Splits",
-    "→ 3x 50m Build-ups w/ Side Slide Return",
-    "10 Single Leg Donkey Kicks", "10 Drop Squats", "10 Mogul Jumps", "20 Ankle Pops",
-    "→ 3x 50m Straight Leg Run w/ Backwards Skip Return",
-    "20 High-Low Bicycle (10+10)", "10 In Place A-Skips", "10 Scorpions", "10 Push Ups w/ Clap",
-    "→ 3x 50m Build-ups w/ Walk Return",
-  ]},
-  circuitB: { name: "Circuit Warm Up B", items: [
-    "10 Quarter Squats", "10 Diagonal Lunges (5 each side)", "20 Mountain Climbers (10 each side)", "20 In-Place Ankle Pops",
-    "→ 3x 50m Build-ups w/ Forward Skip Return",
-    "10 Side Lunges (5 each side)", "5 Walk Ups (push up to pike)", "10 Kneeling Trail Leg Circles (fwd & bkw)", "10 Fire Hydrants",
-    "→ 3x 50m Marching Run w/ Backward Skip Return",
-    "10 Scissor Splits", "10 Lateral Splits", "10 Lead & Trail Leg Lifts (5 each)", "10 SL Glute Bridge w/ leg across knee (5 each)",
-    "→ 4x 50m Build-ups w/ Side Slide Return (alternate)",
-    "10 Prisoner Squats", "10 Mogul Jumps", "10 Lateral Partner Leg Swings", "10 Linear Partner Leg Swings",
-    "→ 3x 50m SLBs w/ Sprinter Jog Return",
-    "20 High-Low Bicycle (10+10)", "10 In Place A-Skips", "10 Scorpions", "10 Push Ups w/ Clap",
-    "→ 3x 50m Build-ups w/ Walk Return",
-  ]},
-  studly: { name: "Studly Warm Up", items: [
-    "1 mile at/under 7-8' pace", "Forward Hip Circles (10 each side)", "25 Push Ups", "50m Skip (windmill R arm)", "25 Sit Ups",
-    "Scorpions (10 each side)", "25 Push Ups", "50m Skip (windmill L arm)", "25 Sit Ups",
-    "Iron Crosses (10 each side)", "25 Push Ups", "50m Side Shuffle", "25 Sit Ups",
-    "Fire Hydrant (10 each leg)", "25 Push Ups", "50m A-Skips OR Marching Run", "25 Sit Ups",
-    "Extenders on all fours (10 each leg)", "25 Push Ups", "50m Carioca", "25 Sit Ups",
-    "Hurdle Stretch (10 knee pickup)", "25 Push Ups", "50m Carioca Step-Overs OR Lateral A-Skip", "25 Sit Ups",
-    "Hurdle Stretch (10 lead-leg pickup)", "25 Push Ups", "50m Straight Leg Shuffle", "25 Sit Ups",
-    "50m Backwards Skip (heel recovery)", "25 Push Ups", "50m Straight Leg Bounds OR Alt. Fast Leg", "25 Sit Ups",
-    "50m B-Skips OR High Knee", "25 Prisoner Squats", "15 Rocket Jumps", "50m Lunges", "15 Burpees",
-    "Get Water", "4x 50m Accelerations (60-90%)", "Dynamic Mobility (linear CBC + lateral leg swings)", "Individual + partner stretch",
-    "2x 50m Accelerations (95-100%)", "Get Water",
-  ]},
-};
-
-const DAY1 = {
-  label: "Speed", full: "Day 1 — Speed",
-  base: "Jog 1 mile + stretch for cool down after the workout.",
-  weeks: {
-    1:"10 x 100m (sprint up + jog back, 1' recovery)",2:"10 x 100m (sprint up + jog back, 1' recovery)",3:"10 x 100m (sprint up + jog back, 1' recovery)",
-    4:"12 x 100m (sprint up + jog back, 1' recovery)",5:"12 x 100m (sprint up + jog back, 1' recovery)",6:"12 x 100m (sprint up + jog back, 1' recovery)",
-    7:"3 x (3-4 Cross Fields) — sprint across field, walk/jog to sideline, 4' rest between sets",
-    8:"3 x (3-4 Cross Fields) — sprint across field, walk/jog to sideline, 4' rest between sets",
-    9:"3 x (3-4 Cross Fields) — sprint across field, walk/jog to sideline, 4' rest between sets",
-    10:"Taper: repeat Wk7-9 pattern at your discretion, prioritize freshness",
-    11:"Taper: repeat Wk7-9 pattern at your discretion, prioritize freshness",
-  },
-  tj: "Full sprint volume is fine — this is direct speed work for your approach. Just don't stack a max-effort sprint day right before/after a heavy bounding day if you can help it; ankles and Achilles need the recovery gap.",
-};
-
-const DAY2 = {
-  label: "Circuits", full: "Day 2 — Circuits & Plyo",
-  base: "Complete a 20-30' run or machine interval before the circuits below.",
-  weeks: {
-    1:'2x General Circuit 1 @ 10-12 reps + 2x Mercury @ 20"/40"',
-    2:'2x General Circuit 2 @ 10-12 reps + 2x Venus @ 20"/40"',
-    3:'2x General Circuit 3 @ 12-14 reps + 2x Mars @ 20"/40"',
-    4:'2x General Circuit 4 @ 12-14 reps + 2x Bounding Series A @ 20"/40"',
-    5:'2x GC1 + 1x GC2 @ 10-12 reps + 2x Mercury @ 30"/30"',
-    6:'2x GC3 + 1x GC4 @ 10-12 reps + 2x Venus @ 30"/30"',
-    7:'2x GC2 + 1x GC3 @ 12-14 reps + 2x Mars @ 30"/30"',
-    8:'2x GC4 + 1x GC1 @ 12-14 reps + 2x Bounding Series A @ 30"/30"',
-    9:"1x Circuit Warm Up",
-    10:"1x Circuit Warm Up B",
-    11:"Light circuit of your choice — pre-season taper",
-  },
-  tj: "When you're short on time, do the bounding/plyo block first and full-effort — that's the piece most specific to your event. The general circuits (GC1-4) are conditioning filler; trim reps there before you trim the plyo.",
-};
-
-const DAY3 = {
-  label: "Hills", full: "Day 3 — Hills",
-  base: "Run 1 mile cool down after the workout. Rest: walk/jog back each rep, 30-60\", 5' between sets if applicable.",
-  weeks: {
-    1:"2 x 4 Over 100m Hills",2:"2 x 5 Over 100m Hills",3:"8 x Over 100m Hills",4:"10 x Over 100m Hills",5:"12 x Over 100m Hills",
-    6:"2 x 7 Over 100m Hills",7:"2 x 8 Over 100m Hills",8:"2 x 9 Over 100m Hills",9:"3 x 4-5 Over 100m Hills",10:"3 x 5-6 Over 100m Hills",
-    11:"Taper: 2 x 4-5 Over 100m Hills, focus on drive phase",
-  },
-  tj: "This is the highest-impact day on your joints of the whole week. If your legs feel beat up, cut volume ~20-25% here first — not on your plyo/bounding day. Worth a direct check-in with Coach Powell on hill volume given your event.",
-};
-
-const DAY4 = {
-  label: "Lunge", full: "Day 4 — Lunge Matrix & Circuit",
-  base: "Run 1 mile before the workout. Jog 1 mile cool down after.",
-  weeks: {
-    1:"1x Lunge Matrix + Running Circuit",2:"1x Lunge Matrix + Vacation Circuit",3:"1x Lunge Matrix + Dudley Circuit",
-    4:"2x Lunge Matrix + Running Circuit",5:"2x Lunge Matrix + Vacation Circuit",6:"2x Lunge Matrix + Dudley Circuit",
-    7:"1x Circuit Warm Up + Running Circuit",8:"1x Circuit Warm Up B + Running Circuit",
-    9:"1x Circuit Warm Up + Vacation Circuit",10:"1x Circuit Warm Up B + Vacation Circuit",
-    11:"1x Circuit Warm Up + Dudley Circuit",
-  },
-  tj: "Good day to add short approach pop-ups (3-5 step run-in → hop-step-jump) after the circuit if you have access to a pit or soft landing — keeps rhythm sharp without more high hill/plyo impact.",
-  lungeMatrixUrl: "https://youtu.be/GJo7_MiRLkU",
-};
-
-const RECOVERY = {
-  label: "Recovery", full: "Days 5-7 — Active Recovery",
-  text: "1-2x 20-30' easy recovery run. Use these days for you — mentally, physically, emotionally.",
-  options: ["Meditate","Mobility / Stretch","Yoga","Pilates","Hike","Bike","Swim","Dance","Recovery Run","Cold/Hot Tub","Sauna","MB Circuit","PT","Chiropractor","Massage","Travel","Read","Sing","Relax","Cook"],
-  tj: "Don't skip the ice baths (2x/week recommended) — triple jump landings add up fast over a week of hills + bounding. This is where you protect next week's training, not lose fitness.",
-};
+async function loadLibrary(folder, targetObj) {
+  const res = await fetch(folder + "/manifest.json");
+  if (!res.ok) throw new Error(folder + " manifest fetch failed: " + res.status);
+  const files = await res.json();
+  for (const file of files) {
+    try {
+      const r = await fetch(folder + "/" + file);
+      if (!r.ok) throw new Error(r.status);
+      const data = await r.json();
+      if (!data.key) continue;
+      targetObj[data.key] = { name: data.name, items: data.items };
+    } catch (e) {
+      console.error("Failed to load " + folder + " file:", file, e);
+    }
+  }
+}
 
 /* ---------------------------------------------------------------
-   PHASES — Summer Training is fully populated; the rest are
-   placeholders ready to receive real content later.
+   PHASES — loaded at runtime from phases/manifest.json + the JSON
+   files it lists. To add a new phase: drop a new phases/xyz.json
+   (same shape as phases/summer.json) into the phases folder and
+   add its filename to phases/manifest.json. index.html itself
+   never needs to change.
 ----------------------------------------------------------------*/
-const PHASES = {
-  summer: { label: "Summer Training", weeksCount: 11, days: { day1: DAY1, day2: DAY2, day3: DAY3, day4: DAY4 }, recovery: RECOVERY },
-  phase1: { label: "Phase 1", weeksCount: 8, days: {}, recovery: null },
-  phase2: { label: "Phase 2", weeksCount: 8, days: {}, recovery: null },
-  competition: { label: "Competition", weeksCount: 6, days: {}, recovery: null },
-};
-const PHASE_ORDER = ["summer", "phase1", "phase2", "competition"];
+let PHASES = {};
+let PHASE_ORDER = [];
+let phasesLoadError = null;
+
+async function loadPhases() {
+  const res = await fetch("phases/manifest.json");
+  if (!res.ok) throw new Error("manifest fetch failed: " + res.status);
+  const files = await res.json();
+  for (const file of files) {
+    try {
+      const r = await fetch("phases/" + file);
+      if (!r.ok) throw new Error(r.status);
+      const data = await r.json();
+      if (!data.key) continue;
+      PHASES[data.key] = data;
+      PHASE_ORDER.push(data.key);
+    } catch (e) {
+      console.error("Failed to load phase file:", file, e);
+    }
+  }
+}
 
 const TABS = ["day1", "day2", "day3", "day4", "recovery"];
 const TAB_FALLBACK_LABEL = { day1: "Day 1", day2: "Day 2", day3: "Day 3", day4: "Day 4", recovery: "Recovery" };
@@ -357,6 +279,7 @@ const TAB_FALLBACK_LABEL = { day1: "Day 1", day2: "Day 2", day3: "Day 3", day4: 
 function currentPhase() { return PHASES[state.phase]; }
 function getDayObj(tabKey) {
   const phase = currentPhase();
+  if (!phase) return null;
   if (tabKey === "recovery") return phase.recovery;
   return phase.days[tabKey] || null;
 }
@@ -377,7 +300,7 @@ function circuitsForDay(dayKey, week) {
     return (map[week] || []).map((k) => CIRCUITS[k]);
   }
   if (dayKey === "day4") {
-    const text = DAY4.weeks[week] || "";
+    const text = (PHASES.summer.days.day4.weeks[week]) || "";
     const out = [];
     if (text.includes("Running Circuit")) out.push(CIRCUITS.running);
     if (text.includes("Vacation Circuit")) out.push(CIRCUITS.vacation);
@@ -926,8 +849,31 @@ function renderHistoryModal() {
 /* ---------------------------------------------------------------
    INIT
 ----------------------------------------------------------------*/
-loadStateForDay();
-render();
+function renderLoading() {
+  document.getElementById("app").innerHTML =
+    '<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#F5F1E8;color:rgba(20,17,15,0.5);font-size:14px;">Loading program…</div>';
+}
+function renderLoadError(err) {
+  document.getElementById("app").innerHTML =
+    '<div style="min-height:100vh;display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;background:#F5F1E8;color:#14110F;font-size:14px;padding:24px;text-align:center;">' +
+    '<strong>Couldn\'t load the training program.</strong>' +
+    '<span style="color:rgba(20,17,15,0.6);font-size:13px;">Check that the phases/ folder deployed alongside index.html, then reload.</span>' +
+    '</div>';
+  console.error(err);
+}
+
+(async function init() {
+  renderLoading();
+  try {
+    await Promise.all([loadPhases(), loadLibrary("circuits", CIRCUITS), loadLibrary("warmups", WARMUPS)]);
+    if (PHASE_ORDER.length === 0) throw new Error("No phases loaded");
+    if (!PHASES[state.phase]) state.phase = PHASE_ORDER[0];
+    loadStateForDay();
+    render();
+  } catch (e) {
+    renderLoadError(e);
+  }
+})();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
