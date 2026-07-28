@@ -511,6 +511,7 @@ function Header() {
         phaseSelect,
       ),
       h("div", { class: "header-right" },
+        h("button", { class: "history-btn", onclick: forceRefresh, title: "Force refresh" }, Icon("refresh-cw", 17, "rgba(245,241,232,0.7)")),
         h("button", { class: "history-btn", onclick: () => { state.catalogOpen = true; render(); } }, Icon("search", 18, "rgba(245,241,232,0.7)")),
         h("button", { class: "history-btn", onclick: () => { state.historyOpen = true; render(); } }, Icon("calendar", 18, "rgba(245,241,232,0.7)")),
         h("div", { class: "week-badge" }, h("span", {}, "Wk"), h("span", { class: "tabular" }, String(state.week))),
@@ -955,6 +956,20 @@ function renderLoadError(err) {
     '<span style="color:rgba(20,17,15,0.6);font-size:13px;">Check that the phases/ folder deployed alongside index.html, then reload.</span>' +
     '</div>';
   console.error(err);
+}
+
+async function forceRefresh() {
+  try {
+    if ("serviceWorker" in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map((r) => r.unregister()));
+    }
+    if ("caches" in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((k) => caches.delete(k)));
+    }
+  } catch (e) { /* ignore, reload anyway */ }
+  location.reload();
 }
 
 (async function init() {

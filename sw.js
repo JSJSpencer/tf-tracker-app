@@ -1,4 +1,4 @@
-const CACHE_NAME = "tf-tracker-v15";
+const CACHE_NAME = "tf-tracker-v16";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -46,12 +46,14 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   // Network-first: always try to get the latest version when online.
-  // Only fall back to the cache when there's no connection. This means
-  // redeploying index.html or any phases/circuits/warmups JSON file
-  // takes effect immediately next time the app is opened with signal —
-  // no manual cache-busting needed.
+  // { cache: "no-store" } is essential here — without it, fetch() can be
+  // silently satisfied by the *browser's own* HTTP disk cache before it
+  // even reaches the network, which defeats "network-first" even though
+  // our JS logic looks correct. This is what caused the standalone
+  // home-screen app to keep showing stale content while a plain Safari
+  // tab on the same URL updated fine.
   event.respondWith(
-    fetch(event.request)
+    fetch(event.request, { cache: "no-store" })
       .then((response) => {
         if (response && response.status === 200) {
           const copy = response.clone();

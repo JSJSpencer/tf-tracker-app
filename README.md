@@ -184,11 +184,11 @@ Same idea as phases:
 It'll sit on your home screen with its own icon, open full-screen, and after the first load keep working with no signal.
 
 ## Updating content later
-Redeploy your changed files (new phase, edited circuit, whatever) to the same host location and you're done — **no need to touch `sw.js` or reinstall anything.** The app always checks the network for the latest version first, and only falls back to its offline cache when there's no signal. Just open the app once with internet after redeploying and it'll pick up the change automatically.
+Redeploy your changed files (new phase, edited circuit, whatever) to the same host location and you're done — **no need to touch `sw.js`.** The app always checks the network for the latest version first, and only falls back to its offline cache when there's no signal.
 
-The only time you'd ever need to remove and re-add the home screen icon is if something looks visibly broken and a normal reload with signal doesn't fix it — that's a "something is actually wrong" situation, not routine maintenance.
+If the home screen app ever looks stale after a deploy (this can happen — iOS sometimes doesn't fully wake up a dormant background app to check for updates on launch), tap the **refresh icon** in the top-right of the header. It clears everything cached and reloads from scratch — no need to delete and reinstall the icon anymore.
 
 ## Notes
-- Progress saves locally on your phone (`localStorage`) per week/day — nothing is sent anywhere.
+- Progress saves locally on your phone (`localStorage`) per week/day — nothing is sent anywhere, and the refresh button above doesn't touch it.
 - A brand-new phase/circuit/warmup file will load correctly the first time your phone is online after you add it, and keeps working offline after that first visit.
-- If you ever do want to force a hard reset of everything cached (rare), bump `CACHE_NAME` in `sw.js` to any new string — that's the one thing that reliably clears old cached data, since it's stored per-origin in Safari independent of the home screen icon.
+- If you ever want to force a hard reset from the deploy side instead, bump `CACHE_NAME` in `sw.js` to any new string.
