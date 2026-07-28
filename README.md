@@ -81,8 +81,14 @@ If it's not obvious, ask me. It's usually one of:
 - If the source doesn't include the kind of "triple jump note" described above, write a reasonable one yourself based on general jumps-event training knowledge, and say in your reply that you added it so I can double check it.
 
 ## Step 4: Tell me what to do with it
-After the JSON, always end with one line telling me exactly what filename to save it as and which manifest.json to add it to, e.g.:
-> Save as `phases/indoor.json`, then add `"indoor.json"` to the list in `phases/manifest.json`.
+This step matters — the single most common mistake is creating the new file but forgetting to register it, and then it silently doesn't show up anywhere with no error message. Every time, end your reply with a deploy checklist in exactly this format:
+
+> **Deploy checklist:**
+> 1. Save this as `<folder>/<filename>.json` (e.g. `warmups/studly2.json`)
+> 2. Open `<folder>/manifest.json` and add `"<filename>.json"` to the list — **this is a second file you must also upload, not just the new content file.**
+> 3. Upload/redeploy both files together.
+
+Two files always change together: the new content file, AND the manifest.json in that same folder. Never present the new file as if it's a complete, ready-to-use deliverable on its own — always pair it with the manifest instruction, even if I don't explicitly ask for it.
 
 Output only valid JSON in the code block (no trailing commas, all quotes properly escaped) — I'll be pasting it directly into a file.
 ````
