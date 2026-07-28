@@ -22,5 +22,9 @@
     "Lateral Squats",
     "V-Sit Ups",
     "60\" Sprint @ 70%"
-  ]
+  ],
+  "timer": {
+    "work": 30,
+    "rest": 15
+  }
 }

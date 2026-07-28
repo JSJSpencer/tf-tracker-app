@@ -22,5 +22,9 @@
     "100m Run",
     "Single Leg Squats (L+R)",
     "200m Run"
-  ]
+  ],
+  "timer": {
+    "work": 30,
+    "rest": 30
+  }
 }
