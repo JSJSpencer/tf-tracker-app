@@ -29,7 +29,7 @@
   .top { background: #14110F; color: #F5F1E8; padding: calc(24px + env(safe-area-inset-top, 0px)) calc(20px + env(safe-area-inset-right, 0px)) 16px calc(20px + env(safe-area-inset-left, 0px)); }
   .top-row { display: flex; align-items: center; justify-content: space-between; }
   .eyebrow { font-size: 10px; text-transform: uppercase; letter-spacing: 3px; font-weight: 700; margin: 0; }
-  .title { font-size: 23px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; line-height: 1.2; margin: 3px 0 0; }
+  .title { font-size: 23px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; line-height: 1.2; margin: 0; }
   .subtitle { font-size: 12px; color: rgba(245,241,232,0.45); margin: 3px 0 0; }
   .phase-select {
     margin-top: 4px; font-size: 12px; font-weight: 600; color: rgba(245,241,232,0.75);
@@ -494,8 +494,7 @@ function Header() {
   return h("header", { class: "top" },
     h("div", { class: "top-row" },
       h("div", {},
-        h("p", { class: "eyebrow", style: { color: accent } }, "Track & Field"),
-        h("h1", { class: "title" }, "Summer Training"),
+        h("h1", { class: "title", style: { color: accent } }, "Track & Field"),
         phaseSelect,
       ),
       h("div", { class: "header-right" },

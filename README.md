@@ -11,7 +11,7 @@ A complete, installable app version of your training tracker. Rebuilt from scrat
 
 ## Don't want to write JSON by hand? Use this AI prompt
 
-Paste the block below into any AI (this one (Claude AI), ChatGPT, whatever), then attach or paste your source material — a PDF, screenshot, whiteboard photo, or typed list describing a phase, circuit, or warm-up. It'll hand back ready-to-save JSON plus the exact filename and manifest line to add.
+Paste the block below into any AI (this one, ChatGPT, whatever), then attach or paste your source material — a PDF, screenshot, whiteboard photo, or typed list describing a phase, circuit, or warm-up. It'll hand back ready-to-save JSON plus the exact filename and manifest line to add.
 
 ````
 You are converting a training program into JSON files for a specific web app. The app reads three kinds of files: **phases** (a multi-week block of training, e.g. "Summer Training" or "Indoor Season"), **circuits** (a named set of exercises done as a block, e.g. "General Circuit 1"), and **warmups** (a named warm-up routine). I will give you source material — a PDF, screenshot, photo of a whiteboard, typed list, or plain description — and you will output the correctly formatted JSON file(s), ready to drop into the app's folders.

@@ -1,4 +1,4 @@
-const CACHE_NAME = "tf-tracker-v13";
+const CACHE_NAME = "tf-tracker-v14";
 const APP_SHELL = [
   "./",
   "./index.html",
