@@ -1,0 +1,91 @@
+{
+  "key": "summer",
+  "label": "Summer Training",
+  "weeksCount": 11,
+  "days": {
+    "day1": {
+      "label": "Speed",
+      "full": "Day 1 — Speed",
+      "base": "Jog 1 mile + stretch for cool down after the workout.",
+      "weeks": {
+        "1": "10 x 100m (sprint up + jog back, 1' recovery)",
+        "2": "10 x 100m (sprint up + jog back, 1' recovery)",
+        "3": "10 x 100m (sprint up + jog back, 1' recovery)",
+        "4": "12 x 100m (sprint up + jog back, 1' recovery)",
+        "5": "12 x 100m (sprint up + jog back, 1' recovery)",
+        "6": "12 x 100m (sprint up + jog back, 1' recovery)",
+        "7": "3 x (3-4 Cross Fields) — sprint across field, walk/jog to sideline, 4' rest between sets",
+        "8": "3 x (3-4 Cross Fields) — sprint across field, walk/jog to sideline, 4' rest between sets",
+        "9": "3 x (3-4 Cross Fields) — sprint across field, walk/jog to sideline, 4' rest between sets",
+        "10": "Taper: repeat Wk7-9 pattern at your discretion, prioritize freshness",
+        "11": "Taper: repeat Wk7-9 pattern at your discretion, prioritize freshness"
+      },
+      "tj": "Full sprint volume is fine — this is direct speed work for your approach. Just don't stack a max-effort sprint day right before/after a heavy bounding day if you can help it; ankles and Achilles need the recovery gap."
+    },
+    "day2": {
+      "label": "Circuits",
+      "full": "Day 2 — Circuits & Plyo",
+      "base": "Complete a 20-30' run or machine interval before the circuits below.",
+      "weeks": {
+        "1": "2x General Circuit 1 @ 10-12 reps + 2x Mercury @ 20\"/40\"",
+        "2": "2x General Circuit 2 @ 10-12 reps + 2x Venus @ 20\"/40\"",
+        "3": "2x General Circuit 3 @ 12-14 reps + 2x Mars @ 20\"/40\"",
+        "4": "2x General Circuit 4 @ 12-14 reps + 2x Bounding Series A @ 20\"/40\"",
+        "5": "2x GC1 + 1x GC2 @ 10-12 reps + 2x Mercury @ 30\"/30\"",
+        "6": "2x GC3 + 1x GC4 @ 10-12 reps + 2x Venus @ 30\"/30\"",
+        "7": "2x GC2 + 1x GC3 @ 12-14 reps + 2x Mars @ 30\"/30\"",
+        "8": "2x GC4 + 1x GC1 @ 12-14 reps + 2x Bounding Series A @ 30\"/30\"",
+        "9": "1x Circuit Warm Up",
+        "10": "1x Circuit Warm Up B",
+        "11": "Light circuit of your choice — pre-season taper"
+      },
+      "tj": "When you're short on time, do the bounding/plyo block first and full-effort — that's the piece most specific to your event. The general circuits (GC1-4) are conditioning filler; trim reps there before you trim the plyo."
+    },
+    "day3": {
+      "label": "Hills",
+      "full": "Day 3 — Hills",
+      "base": "Run 1 mile cool down after the workout. Rest: walk/jog back each rep, 30-60\", 5' between sets if applicable.",
+      "weeks": {
+        "1": "2 x 4 Over 100m Hills",
+        "2": "2 x 5 Over 100m Hills",
+        "3": "8 x Over 100m Hills",
+        "4": "10 x Over 100m Hills",
+        "5": "12 x Over 100m Hills",
+        "6": "2 x 7 Over 100m Hills",
+        "7": "2 x 8 Over 100m Hills",
+        "8": "2 x 9 Over 100m Hills",
+        "9": "3 x 4-5 Over 100m Hills",
+        "10": "3 x 5-6 Over 100m Hills",
+        "11": "Taper: 2 x 4-5 Over 100m Hills, focus on drive phase"
+      },
+      "tj": "This is the highest-impact day on your joints of the whole week. If your legs feel beat up, cut volume ~20-25% here first — not on your plyo/bounding day. Worth a direct check-in with Coach Powell on hill volume given your event."
+    },
+    "day4": {
+      "label": "Lunge",
+      "full": "Day 4 — Lunge Matrix & Circuit",
+      "base": "Run 1 mile before the workout. Jog 1 mile cool down after.",
+      "weeks": {
+        "1": "1x Lunge Matrix + Running Circuit",
+        "2": "1x Lunge Matrix + Vacation Circuit",
+        "3": "1x Lunge Matrix + Dudley Circuit",
+        "4": "2x Lunge Matrix + Running Circuit",
+        "5": "2x Lunge Matrix + Vacation Circuit",
+        "6": "2x Lunge Matrix + Dudley Circuit",
+        "7": "1x Circuit Warm Up + Running Circuit",
+        "8": "1x Circuit Warm Up B + Running Circuit",
+        "9": "1x Circuit Warm Up + Vacation Circuit",
+        "10": "1x Circuit Warm Up B + Vacation Circuit",
+        "11": "1x Circuit Warm Up + Dudley Circuit"
+      },
+      "tj": "Good day to add short approach pop-ups (3-5 step run-in → hop-step-jump) after the circuit if you have access to a pit or soft landing — keeps rhythm sharp without more high hill/plyo impact.",
+      "lungeMatrixUrl": "https://youtu.be/GJo7_MiRLkU"
+    }
+  },
+  "recovery": {
+    "label": "Recovery",
+    "full": "Days 5-7 — Active Recovery",
+    "text": "1-2x 20-30' easy recovery run. Use these days for you — mentally, physically, emotionally.",
+    "options": ["Meditate", "Mobility / Stretch", "Yoga", "Pilates", "Hike", "Bike", "Swim", "Dance", "Recovery Run", "Cold/Hot Tub", "Sauna", "MB Circuit", "PT", "Chiropractor", "Massage", "Travel", "Read", "Sing", "Relax", "Cook"],
+    "tj": "Don't skip the ice baths (2x/week recommended) — triple jump landings add up fast over a week of hills + bounding. This is where you protect next week's training, not lose fitness."
+  }
+}
