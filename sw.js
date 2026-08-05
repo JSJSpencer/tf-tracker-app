@@ -1,4 +1,4 @@
-const CACHE_NAME = "tf-tracker-v19";
+const CACHE_NAME = "tf-tracker-v20";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -23,12 +23,11 @@ const APP_SHELL = [
   "./circuits/venus.json",
   "./circuits/mars.json",
   "./circuits/boundingA.json",
-  "./circuits/ljtj.json",
-  "./circuits/day4sequence.json",
   "./warmups/manifest.json",
   "./warmups/circuitA.json",
   "./warmups/circuitB.json",
-  "./warmups/studly.json"
+  "./warmups/studly.json",
+  "./warmups/ljtj.json",
 ];
 
 self.addEventListener("install", (event) => {

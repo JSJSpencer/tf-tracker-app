@@ -308,13 +308,18 @@ function circuitsForDay(dayKey, week) {
     if (week === 9) return [WARMUPS.circuitA];
     if (week === 10) return [WARMUPS.circuitB];
     const map = {
-      1:["gc1","ljtj","mercury"], 2:["gc2","ljtj","venus"], 3:["gc3","ljtj","mars"], 4:["gc4","ljtj","boundingA"],
-      5:["gc1","gc2","ljtj","mercury"], 6:["gc3","gc4","ljtj","venus"], 7:["gc2","gc3","ljtj","mars"], 8:["gc4","gc1","ljtj","boundingA"],
+      1:["gc1","mercury"], 2:["gc2","venus"], 3:["gc3","mars"], 4:["gc4","boundingA"],
+      5:["gc1","gc2","mercury"], 6:["gc3","gc4","venus"], 7:["gc2","gc3","mars"], 8:["gc4","gc1","boundingA"],
     };
-    return (map[week] || []).map((k) => CIRCUITS[k]);
+    const sequence = map[week] || [];
+    if (sequence.length === 0) return [];
+    // LJ/TJ warmup slots between the general circuit(s) and the plyo block
+    const withWarmup = [...sequence];
+    withWarmup.splice(withWarmup.length - 1, 0, "__ljtj__");
+    return withWarmup.map((k) => (k === "__ljtj__" ? WARMUPS.ljtj : CIRCUITS[k]));
   }
   if (dayKey === "day4") {
-    return [CIRCUITS.day4sequence];
+    return [WARMUPS.ljtj];
   }
   if (dayKey === "day5") {
     const text = (PHASES.summer.days.day5.weeks[week]) || "";
