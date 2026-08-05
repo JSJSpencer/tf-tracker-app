@@ -25,7 +25,7 @@
     "day2": {
       "label": "Circuits",
       "full": "Day 2 — Circuits & Plyo",
-      "base": "Complete a 20-30' run or machine interval before the circuits below.",
+      "base": "Complete a 20-30' run or machine interval before the circuits below. Includes an LJ/TJ warmup between the circuit and plyo work.",
       "weeks": {
         "1": "2x General Circuit 1 @ 10-12 reps + 2x Mercury @ 20\"/40\"",
         "2": "2x General Circuit 2 @ 10-12 reps + 2x Venus @ 20\"/40\"",
@@ -63,19 +63,19 @@
     "day4": {
       "label": "Jumps",
       "full": "Day 4 — Jump Prep",
-      "base": "Hurdle mobility and short-approach jump technical work.",
+      "base": "Hurdle mobility and short-approach jump technical work — same structure every week.",
       "weeks": {
-        "1": "General Warmup, Hip (Hurdle) Mobility, Hurdle Hops, LJ/TJ Warmup, Short Approach Jumps",
-        "2": "General Warmup, Hip (Hurdle) Mobility, Hurdle Hops, LJ/TJ Warmup, Short Approach Jumps",
-        "3": "General Warmup, Hip (Hurdle) Mobility, Hurdle Hops, LJ/TJ Warmup, Short Approach Jumps",
-        "4": "General Warmup, Hip (Hurdle) Mobility, Hurdle Hops, LJ/TJ Warmup, Short Approach Jumps",
-        "5": "General Warmup, Hip (Hurdle) Mobility, Hurdle Hops, LJ/TJ Warmup, Short Approach Jumps",
-        "6": "General Warmup, Hip (Hurdle) Mobility, Hurdle Hops, LJ/TJ Warmup, Short Approach Jumps",
-        "7": "General Warmup, Hip (Hurdle) Mobility, Hurdle Hops, LJ/TJ Warmup, Short Approach Jumps",
-        "8": "General Warmup, Hip (Hurdle) Mobility, Hurdle Hops, LJ/TJ Warmup, Short Approach Jumps",
-        "9": "General Warmup, Hip (Hurdle) Mobility, Hurdle Hops, LJ/TJ Warmup, Short Approach Jumps",
-        "10": "General Warmup, Hip (Hurdle) Mobility, Hurdle Hops, LJ/TJ Warmup, Short Approach Jumps",
-        "11": "General Warmup, Hip (Hurdle) Mobility, Hurdle Hops, LJ/TJ Warmup, Short Approach Jumps"
+        "1": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps",
+        "2": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps",
+        "3": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps",
+        "4": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps",
+        "5": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps",
+        "6": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps",
+        "7": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps",
+        "8": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps",
+        "9": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps",
+        "10": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps",
+        "11": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps"
       },
       "tj": "This day is built for you specifically — hurdle mobility and short approach jumps are exactly the kind of low-volume, high-quality technical work that keeps your rhythm sharp without adding to your impact load for the week."
     },
