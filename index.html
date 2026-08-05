@@ -94,6 +94,8 @@
   }
   .day-done-btn.off { background: #fff; border: 2px solid rgba(20,17,15,0.15); color: rgba(20,17,15,0.55); }
   .day-done-btn.on { border: none; color: #fff; }
+  .pill-row { display: flex; gap: 8px; }
+  .pill-row .day-done-btn { width: auto; flex: 1; }
 
   .empty-phase { text-align: center; padding: 8px 4px; }
   .empty-phase p { font-size: 14px; color: rgba(20,17,15,0.55); margin: 6px 0 0; line-height: 1.5; }
@@ -388,12 +390,12 @@ function parseReps(text) {
   if (!count || count < 1 || count > 30) return null;
   return { count, desc: m[2].trim() };
 }
-function repChecklistPrefKey(tabKey) { return `prefs:repChecklist:${tabKey}`; }
-function isRepChecklistOn(tabKey) {
-  try { return localStorage.getItem(repChecklistPrefKey(tabKey)) === "1"; } catch (e) { return false; }
+function blocksTogglePrefKey(tabKey) { return `prefs:blocksToggle:${tabKey}`; }
+function isBlocksToggleOn(tabKey) {
+  try { return localStorage.getItem(blocksTogglePrefKey(tabKey)) === "1"; } catch (e) { return false; }
 }
-function setRepChecklistOn(tabKey, val) {
-  try { localStorage.setItem(repChecklistPrefKey(tabKey), val ? "1" : "0"); } catch (e) {}
+function setBlocksToggleOn(tabKey, val) {
+  try { localStorage.setItem(blocksTogglePrefKey(tabKey), val ? "1" : "0"); } catch (e) {}
 }
 
 /* ---------------------------------------------------------------
@@ -591,6 +593,15 @@ function Header() {
   );
 }
 
+function getEffectiveBlocks(dayObj, tabKey, week) {
+  if (dayObj.blocks && dayObj.blocks.length > 0) return dayObj.blocks;
+  if (isBlocksToggleOn(tabKey)) {
+    const parsed = parseReps(dayObj.weeks[week]);
+    if (parsed) return Array.from({ length: parsed.count }, (_, i) => `Rep ${i + 1} — ${parsed.desc}`);
+  }
+  return null;
+}
+
 function DayDoneButton(accent) {
   const done = isDayDone(state.phase, state.week, state.activeTab);
   return h("button", {
@@ -598,6 +609,15 @@ function DayDoneButton(accent) {
     style: done ? { backgroundColor: accent } : {},
     onclick: toggleDayDone,
   }, Icon(done ? "check" : "calendar", 16, done ? "#fff" : "rgba(20,17,15,0.55)"), done ? "Day Complete — tap to undo" : "Mark Day Complete");
+}
+
+function RecoveryDayPill(label, subKey, accent) {
+  const done = isDayDone(state.phase, state.week, subKey);
+  return h("button", {
+    class: "day-done-btn " + (done ? "on" : "off"),
+    style: done ? { backgroundColor: accent } : {},
+    onclick: () => { setDayDone(state.phase, state.week, subKey, !done); render(); },
+  }, Icon(done ? "check" : "calendar", 16, done ? "#fff" : "rgba(20,17,15,0.55)"), done ? `${label} — Done` : `Mark ${label}`);
 }
 
 function DayMain() {
@@ -618,7 +638,9 @@ function DayMain() {
   }
 
   const groups = circuitsForDay(state.activeTab, state.week);
-  const totalBoxes = groups.reduce((sum, g) => sum + g.items.filter((it) => !it.startsWith("→")).length, 0);
+  const effectiveBlocks = getEffectiveBlocks(dayObj, state.activeTab, state.week);
+  const blocksCount = (effectiveBlocks || []).filter((it) => !it.startsWith("→")).length;
+  const totalBoxes = groups.reduce((sum, g) => sum + g.items.filter((it) => !it.startsWith("→")).length, 0) + blocksCount;
   const doneBoxes = Object.values(state.checked).filter(Boolean).length;
   const allChecked = totalBoxes > 0 && doneBoxes >= totalBoxes;
 
@@ -656,39 +678,52 @@ function DayMain() {
       h("div", { class: "warmup-header" }, h("h3", { style: { margin: "0" } }, "Warm Up"), select),
       list,
     )));
+  }
 
-    // optional rep checklist — same idea as the warm-up checklist, but for the
-    // workout prescription itself (e.g. "10 x 100m" -> 10 checkable reps)
-    const repsOn = isRepChecklistOn(state.activeTab);
-    const parsed = parseReps(dayObj.weeks[state.week]);
-    const toggleId = `repToggle-${state.activeTab}`;
-    const switchInput = h("input", { type: "checkbox", id: toggleId });
-    switchInput.checked = repsOn;
-    switchInput.addEventListener("change", (e) => { setRepChecklistOn(state.activeTab, e.target.checked); render(); });
+  // SESSION BLOCKS — one unified mechanism for "this day is a checklist of
+  // distinct components," with two possible sources:
+  //  1. An explicit `blocks` array in the day's own data (always shown), or
+  //  2. Auto-parsed from the week's "N x thing" prescription text, behind an
+  //     opt-in toggle (since forcing that expansion isn't always wanted).
+  // Either way it renders through the same card, same Checklist component,
+  // and the same "blocks-" storage prefix — genuinely one mechanism, not two.
+  {
+    const explicitBlocks = (dayObj.blocks && dayObj.blocks.length > 0) ? dayObj.blocks : null;
+    const canToggle = !explicitBlocks;
+    const toggleOn = canToggle && isBlocksToggleOn(state.activeTab);
+    const items = effectiveBlocks;
 
-    const repsCardBody = h("div", { class: "card-body" },
-      h("div", { class: "toggle-row" },
-        h("h3", { style: { margin: "0" } }, "Rep Checklist"),
-        h("label", { class: "switch" }, switchInput, h("span", { class: "switch-track" })),
-      ),
-    );
-    if (repsOn) {
-      if (parsed) {
-        const repsChecked = Object.fromEntries(Object.entries(state.checked).filter(([k]) => k.startsWith("reps-")).map(([k, v]) => [k.replace("reps-", ""), v]));
-        const items = Array.from({ length: parsed.count }, (_, i) => `Rep ${i + 1} — ${parsed.desc}`);
-        const repsList = Checklist(items, repsChecked, accent, (i) => {
-          const key = `reps-${i}`;
+    if (explicitBlocks || canToggle) {
+      const cardBody = h("div", { class: "card-body" });
+      if (canToggle) {
+        const toggleId = `blocksToggle-${state.activeTab}`;
+        const switchInput = h("input", { type: "checkbox", id: toggleId });
+        switchInput.checked = toggleOn;
+        switchInput.addEventListener("change", (e) => { setBlocksToggleOn(state.activeTab, e.target.checked); render(); });
+        cardBody.appendChild(h("div", { class: "toggle-row" },
+          h("h3", { style: { margin: "0" } }, "Session Blocks"),
+          h("label", { class: "switch" }, switchInput, h("span", { class: "switch-track" })),
+        ));
+      } else {
+        cardBody.appendChild(h("h3", {}, "Session Blocks"));
+      }
+
+      if (items) {
+        const blocksChecked = Object.fromEntries(Object.entries(state.checked).filter(([k]) => k.startsWith("blocks-")).map(([k, v]) => [k.replace("blocks-", ""), v]));
+        const blocksList = Checklist(items, blocksChecked, accent, (i) => {
+          const key = `blocks-${i}`;
           state.checked[key] = !state.checked[key];
           persist();
           render();
         });
-        repsCardBody.appendChild(h("p", { class: "timer-hint", style: { marginBottom: "4px" } }, `${parsed.count} reps — tap each one off as you go.`));
-        repsCardBody.appendChild(repsList);
-      } else {
-        repsCardBody.appendChild(h("p", { class: "timer-hint" }, "Can't auto-split this week's prescription into reps — check it off as one block on the day-complete button above."));
+        if (canToggle) cardBody.appendChild(h("p", { class: "timer-hint", style: { marginBottom: "4px" } }, `${items.length} reps — tap each one off as you go.`));
+        cardBody.appendChild(blocksList);
+      } else if (toggleOn && canToggle) {
+        cardBody.appendChild(h("p", { class: "timer-hint" }, "Can't auto-split this week's prescription into reps — check it off as one block on the day-complete button above."));
       }
+
+      frag.appendChild(h("div", { class: "card" }, cardBody));
     }
-    frag.appendChild(h("div", { class: "card" }, repsCardBody));
   }
 
   if (totalBoxes > 0 && !allChecked) {
@@ -761,6 +796,7 @@ function RecoveryMain() {
   const accent = ACCENT.recovery;
   const recovery = getDayObj("recovery");
   const frag = document.createDocumentFragment();
+  const dayPills = h("div", { class: "pill-row" }, RecoveryDayPill("Day 6", "recovery-day6", accent), RecoveryDayPill("Day 7", "recovery-day7", accent));
 
   if (!recovery) {
     frag.appendChild(h("div", { class: "card" },
@@ -770,7 +806,7 @@ function RecoveryMain() {
         h("p", {}, `No recovery guidance added yet for ${currentPhase().label}.`),
       ),
     ));
-    frag.appendChild(DayDoneButton(accent));
+    frag.appendChild(dayPills);
     return frag;
   }
 
@@ -778,7 +814,7 @@ function RecoveryMain() {
     h("div", { class: "card-accent-bar", style: { backgroundColor: accent } }),
     h("div", { class: "card-body" }, h("h2", {}, recovery.full), h("p", { class: "desc" }, recovery.text)),
   ));
-  frag.appendChild(DayDoneButton(accent));
+  frag.appendChild(dayPills);
   frag.appendChild(h("div", { class: "tj-note recovery" }, Icon("droplet", 18, "#2F6F5E"), h("p", {}, recovery.tj)));
   const chipRow = h("div", { class: "chip-row" });
   recovery.options.forEach((o) => chipRow.appendChild(h("span", { class: "chip", style: { backgroundColor: accent + "12" } }, o)));
@@ -876,12 +912,20 @@ function HistoryModal() {
   weeksArr.forEach((w) => {
     grid.appendChild(h("div", { class: "history-week-label" }, `W${w}`));
     TABS.forEach((key) => {
-      const done = isDayDone(state.phase, w, key);
+      const isRecovery = key === "recovery";
+      const done = isRecovery
+        ? (isDayDone(state.phase, w, "recovery-day6") && isDayDone(state.phase, w, "recovery-day7"))
+        : isDayDone(state.phase, w, key);
       const cell = h("button", {
         class: "history-cell" + (done ? " done" : ""),
         style: done ? { "--cell-accent": ACCENT[key] } : {},
         onclick: () => {
-          setDayDone(state.phase, w, key, !done);
+          if (isRecovery) {
+            setDayDone(state.phase, w, "recovery-day6", !done);
+            setDayDone(state.phase, w, "recovery-day7", !done);
+          } else {
+            setDayDone(state.phase, w, key, !done);
+          }
           renderHistoryModal();
         },
       }, done ? Icon("check", 12, "#fff", 3) : null);
