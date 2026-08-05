@@ -65,19 +65,26 @@
       "full": "Day 4 — Jump Prep",
       "base": "Hurdle mobility and short-approach jump technical work — same structure every week.",
       "weeks": {
-        "1": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps",
-        "2": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps",
-        "3": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps",
-        "4": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps",
-        "5": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps",
-        "6": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps",
-        "7": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps",
-        "8": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps",
-        "9": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps",
-        "10": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps",
-        "11": "General Warmup, Hip (Hurdle) Mobility (8-12 hurdles), Hurdle Hops (4-6 hurdles), LJ/TJ Warmup, Short Approach Jumps"
+        "1": "Same structure every week — see blocks below",
+        "2": "Same structure every week — see blocks below",
+        "3": "Same structure every week — see blocks below",
+        "4": "Same structure every week — see blocks below",
+        "5": "Same structure every week — see blocks below",
+        "6": "Same structure every week — see blocks below",
+        "7": "Same structure every week — see blocks below",
+        "8": "Same structure every week — see blocks below",
+        "9": "Same structure every week — see blocks below",
+        "10": "Same structure every week — see blocks below",
+        "11": "Same structure every week — see blocks below"
       },
-      "tj": "This day is built for you specifically — hurdle mobility and short approach jumps are exactly the kind of low-volume, high-quality technical work that keeps your rhythm sharp without adding to your impact load for the week."
+      "tj": "This day is built for you specifically — hurdle mobility and short approach jumps are exactly the kind of low-volume, high-quality technical work that keeps your rhythm sharp without adding to your impact load for the week.",
+      "blocks": [
+        "General Warmup",
+        "Hip (Hurdle) Mobility (8-12 hurdles)",
+        "Hurdle Hops (4-6 hurdles)",
+        "LJ/TJ Warmup",
+        "Short Approach Jumps"
+      ]
     },
     "day5": {
       "label": "Lunge",
@@ -102,7 +109,7 @@
   },
   "recovery": {
     "label": "Recovery",
-    "full": "Days 5-7 — Active Recovery",
+    "full": "Days 6-7 — Active Recovery",
     "text": "1-2x 20-30' easy recovery run. Use these days for you — mentally, physically, emotionally.",
     "options": [
       "Meditate",
