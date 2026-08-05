@@ -7,7 +7,10 @@ A complete, installable app version of your training tracker. Rebuilt from scrat
 - **Phases live in separate files.** `index.html` never needs to change when you add a new phase — you just drop a new JSON file into the `phases/` folder and add its filename to `phases/manifest.json`.
 - **Mark Day Complete**: a button on every day, independent of the exercise checkboxes.
 - **Training Log**: tap the calendar icon in the header to see a grid of every week/day, with a checkmark for anything marked complete. Tap any cell to toggle it.
-- **Rep Checklist**: on Speed and Hills days, flip the switch to turn the week's prescription (e.g. "10 x 100m") into individual checkable reps.
+- **Catalog**: tap the search icon in the header to browse and search every circuit and warm-up currently loaded, independent of phase.
+- **Session Blocks**: one unified checklist mechanism for "this day is made of distinct components you want to check off." It works two ways — auto-generated from a "10 x 100m"-style prescription (toggle it on per day), or an explicit list you define directly in a day's data (like a jump-prep day made of warmup/mobility/hops/jumps). Either way it's the same card, same behavior.
+- **Day 5 support**: phases can now have up to 5 distinct workout days (`day1`-`day5`) plus Recovery.
+- **Two recovery pills**: Recovery now has independent "Mark Day 6" / "Mark Day 7" buttons instead of one combined day-complete button.
 
 ## Don't want to write JSON by hand? Use this AI prompt
 
@@ -63,11 +66,14 @@ If it's not obvious, ask me. It's usually one of:
         "1": "Week 1's prescription, e.g. \"5 x 60m\"",
         "2": "Week 2's prescription"
       },
-      "tj": "A short coaching note for a triple jumper doing this program — flag anything that needs modifying for a jumper's joint/impact load, or say what to prioritize if short on time. Write this yourself based on the workout content; don't leave it blank."
+      "tj": "A short coaching note for a triple jumper doing this program — flag anything that needs modifying for a jumper's joint/impact load, or say what to prioritize if short on time. Write this yourself based on the workout content; don't leave it blank.",
+      "blocks": ["Optional list of distinct session components", "Each renders as its own checkable row"],
+      "lungeMatrixUrl": "https://... (optional, any day can have a video link, not just one named day4/day5)"
     },
     "day2": { "...": "same shape as day1" },
     "day3": { "...": "same shape as day1" },
-    "day4": { "...": "same shape as day1, optionally add \"lungeMatrixUrl\": \"https://...\" if a video link is given" }
+    "day4": { "...": "same shape as day1" },
+    "day5": { "...": "same shape as day1 — currently supports day1 through day5" }
   },
   "recovery": {
     "label": "Recovery",
@@ -78,8 +84,9 @@ If it's not obvious, ask me. It's usually one of:
   }
 }
 ```
-- Only include the `day1`-`day4` keys that actually exist in the source — leave the others out entirely rather than filling them with placeholders.
-- `weeks` only needs entries for the weeks you actually have information on. If a week's prescription follows a clean "`<number> x <description>`" pattern (e.g. `"10 x 100m"`), keep it in that exact format where possible — the app auto-generates a rep-by-rep checklist from that pattern.
+- Only include the day keys that actually exist in the source — leave the others out entirely rather than filling them with placeholders. Up to 5 workout days (`day1`-`day5`) are supported.
+- `weeks` only needs entries for the weeks you actually have information on.
+- **`blocks` is optional.** Use it when a day is made of several *different* named components (like a jump-prep day: warmup, hurdle mobility, hurdle hops, approach jumps) rather than one exercise repeated N times. Don't use `blocks` for a simple "`<number> x <description>`" prescription like "10 x 100m" — leave that as plain text in `weeks`, since the app can already auto-generate a rep-by-rep checklist from that pattern on its own (a toggle the person using the app controls, not something you set in the file). Only reach for `blocks` when the day's structure genuinely isn't "one thing repeated."
 - `recovery` can be omitted or set to `null` if the source doesn't cover it.
 - If the source doesn't include the kind of "triple jump note" described above, write a reasonable one yourself based on general jumps-event training knowledge, and say in your reply that you added it so I can double check it.
 
@@ -113,6 +120,8 @@ Same idea as phases:
 
 **One caveat:** which circuits show up on which day/week is still decided by logic in `index.html` (the `circuitsForDay` function) — adding a new circuit file makes its data available and lets its Plyo/Circuit Timer work correctly, but you'd still need a small code change (or ask me) to actually schedule it into a specific day/week for a phase. This is different from adding a phase, which is fully self-contained.
 
+**Another caveat:** the app currently supports up to 5 workout days per phase (`day1` through `day5`) plus Recovery — that's a fixed tab structure in `index.html`. A phase with fewer days (like the placeholder phases, which have none yet) works fine. Needing a 6th distinct workout day would require a small code change to add another tab slot — ask me if that comes up.
+
 ## How to add a new phase (no code editing of index.html required)
 
 1. Copy `phases/phase1.json` (or any existing file) as a starting template.
@@ -136,15 +145,18 @@ Same idea as phases:
       "full": "Day 1 — Speed",
       "base": "Text shown under the day title.",
       "weeks": { "1": "5 x 60m", "2": "5 x 60m", "3": "6 x 60m" },
-      "tj": "Triple jump note shown in the green box."
+      "tj": "Triple jump note shown in the green box.",
+      "blocks": ["Optional: distinct session components, each its own checkable row"],
+      "lungeMatrixUrl": "https://... (optional, works on any day)"
     },
     "day2": { "...": "same shape" },
     "day3": { "...": "same shape" },
-    "day4": { "...": "same shape, optionally add \"lungeMatrixUrl\": \"https://...\"" }
+    "day4": { "...": "same shape" },
+    "day5": { "...": "same shape — day1 through day5 are supported" }
   },
   "recovery": {
     "label": "Recovery",
-    "full": "Days 5-7 — Active Recovery",
+    "full": "Days 6-7 — Active Recovery",
     "text": "Description text.",
     "options": ["Yoga", "Swim", "..."],
     "tj": "Triple jump note for recovery days."
@@ -153,10 +165,11 @@ Same idea as phases:
 ```
 - `key` must be unique and match what's in the filename (no spaces).
 - `weeksCount` controls how many weeks show in the top lane track.
-- `days` can have anywhere from 0 to 4 entries (`day1`-`day4`). Missing days show as "no program added yet" in the app.
-- `recovery` can be `null` if you don't have recovery content yet for that phase.
-- The `weeks` map only needs entries for the weeks you have content for — the app just won't show a prescription for weeks you leave out. Sets/reps auto-parse for the Rep Checklist feature when they start with a number and "x" (e.g. `"5 x 60m"`).
-- Circuit checklists (General Circuits, Mercury/Venus/Mars, Vacation/Dudley, etc.) are Summer-Training-specific and their day/week scheduling stays coded in `index.html` — new phases get the plain prescription text plus the day-complete button and rep checklist, but not auto-scheduled circuit checklists unless you ask for that to be added for a specific phase.
+- `days` can have anywhere from 0 to 5 entries (`day1`-`day5`). Missing days show as "no program added yet" in the app.
+- `recovery` can be `null` if you don't have recovery content yet for that phase. Recovery gets two independent "Mark Day 6" / "Mark Day 7" pills rather than a single day-complete button, since it typically spans two days.
+- The `weeks` map only needs entries for the weeks you have content for — the app just won't show a prescription for weeks you leave out.
+- **`blocks` is optional** and covers the same ground as auto-parsed reps, just for days that aren't "one exercise repeated N times." If a day's `weeks` text follows the "`<number> x <description>`" pattern (e.g. `"10 x 100m"`), the app can auto-generate a rep-by-rep checklist from it (toggled on per-day by the person using the app — this only applies when `blocks` isn't already set). If a day is instead made of several *different* named components (like a jump-prep day: warmup, hurdle mobility, hurdle hops, approach jumps), list them explicitly in `blocks` instead — that renders unconditionally as its own checklist, no toggle needed. Both ultimately render through the same "Session Blocks" checklist mechanism.
+- Circuit checklists (General Circuits, Mercury/Venus/Mars, Vacation/Dudley, etc.) are Summer-Training-specific and their day/week scheduling stays coded in `index.html` — new phases get the plain prescription text plus the day-complete button and Session Blocks, but not auto-scheduled circuit checklists unless you ask for that to be added for a specific phase.
 
 ## Files
 - `index.html` — the whole app (HTML + CSS + JS, self-contained, fetches all data at runtime)
